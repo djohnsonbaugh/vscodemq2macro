@@ -1,0 +1,1165 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "mq2macro",
+	"patterns": [
+		{ "include": "#comment" },
+		{ "include": "#preprocessor" },
+        { "include": "#sub" },
+		{ "include": "#invalid-illegalcharacters" }
+	],
+	"repository": {
+		"strings": {
+			"begin": "\"",
+			"beginCaptures": {"0": {"name": "punctuation.separator.par.mq2macro"}},
+			"end": "\"",
+			"endCaptures": {"0": {"name": "punctuation.separator.par.mq2macro"}},
+			"patterns": [
+				{ "include": "#variabledelimiter"},
+				{"include": "#substringparam"}
+			]
+		},
+		"comment": {
+			"patterns": [{
+				"name": "comment.block.cs",
+				"begin": "\\|\\*{2}",
+				"beginCaptures": {
+					"0": { "name": "punctuation.definition.comment.mq2macro" }
+				},
+				"end": "\\*{2}\\|",
+				"endCaptures": {
+					"0": { "name": "punctuation.definition.comment.mq2macro" }
+				}
+			},
+			{
+				"name": "comment.line.pipe.mq2macro",
+				"begin": "(^\\s+)?(?=\\|)",
+				"beginCaptures": {
+					"0": { "name": "punctuation.whitespace.comment.leading.mq2macro" }
+				},
+				"end": "(?=$)"
+			},
+			{
+				"name": "comment.line.pipe.mq2macro",
+				"begin": "(?<!\\|)\\|(?!\\|)",
+				"beginCaptures": {
+					"0": {
+						"name": "punctuation.definition.comment.mq2macro"
+					}
+				},
+				"end": "(?=$)"
+			}]
+		},
+		"preprocessor": {
+			"name": "meta.preprocessor.mq2macro",
+			"begin": "^\\s*(\\#)\\s*",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.separator.hash.mq2macro"
+				}
+			},
+			"end": "(?<=$)",
+			"patterns": [
+				{ "include": "#comment" },
+				{ "include": "#preprocessor-event" },
+				{ "include": "#preprocessor-turbo" },
+				{ "include": "#preprocessor-include" },
+				{ "include": "#preprocessor-chat" },
+				{ "include": "#preprocessor-warning" },
+				{ "include": "#preprocessor-define" },
+				{ "include": "#invalid-illegalcharacters" }
+			]
+		},
+		"preprocessor-event": {
+			"begin": "\\b((?i)event)\\b\\s*\\b([_[:alpha:]][_[:alnum:]]*)\\b",
+			"beginCaptures": {
+				"1": { "name": "keyword.preprocessor.region.mq2macro" },
+				"2": { "name": "entity.name.variable.preprocessor.symbol.mq2macro" }
+			},
+			"end": "(?=$)",
+			"patterns": [
+				{
+					"match": "\\\"[^\"]*\\\"",
+					"captures": {
+						"0": { "name": "string.quoted.double.cs" }
+					}
+				},
+				{ "include": "#comment" },
+				{ "include": "#invalid-illegalcharacters" }
+			]
+		},
+		"preprocessor-turbo": {
+			"begin": "\\b((?i)turbo)\\b\\s*",
+			"beginCaptures": {
+				"1": { "name": "keyword.preprocessor.turbo.mq2macro" }
+			},
+			"end": "(?=$)",
+			"patterns": [
+				{
+					"match": "\\b([0-9]+)\\b",
+					"captures": {
+						"0": { "name": "constant.numeric.int.mq2macro" }
+					}
+				},
+				{ "include": "#comment" },
+				{ "include": "#invalid-illegalcharacters" }
+			]
+		},
+		"preprocessor-include": {
+			"begin": "\\b((?i)include)\\b\\s*\\b([_[:alpha:]][ \\.\\/\\\\_[:alnum:]]*)",
+			"beginCaptures": {
+				"1": { "name": "keyword.preprocessor.region.mq2macro" },
+				"2": { "name": "string.unquoted.mq2macro" }
+			},
+			"end": "(?=$)",
+			"patterns": [
+				{ "include": "#comment" }
+			]
+		},
+		"preprocessor-define": {
+			"begin": "\\b((?i)define)\\b\\s*([\\/_[:alpha:]][_[:alnum:]]*)\\b([^|]*)",
+			"beginCaptures": {
+				"1": { "name": "keyword.preprocessor.define.mq2macro" },
+				"2": { "name": "entity.name.variable.preprocessor.symbol.mq2macro" },
+				"3": { "name": "string.unquoted.mq2macro" }
+			},
+			"end": "(?=$)",
+			"patterns": [
+				{ "include": "#comment" }
+			]
+		},
+		"preprocessor-warning": {
+			"begin": "\\b((?i)warning)\\b",
+			"beginCaptures": {
+				"1": { "name": "keyword.preprocessor.warning.mq2macro" }
+			},
+			"end": "(?=$)",
+			"patterns": [
+				{ "include": "#comment" },
+				{ "include": "#invalid-illegalcharacters" }
+			]
+		},
+		"preprocessor-chat": {
+			"begin": "\\b((?i)chat)\\b\\s*(\\b[_[:alpha:]][_[:alnum:]]*\\b)\\s*",
+			"beginCaptures": {
+				"1": { "name": "keyword.preprocessor.chat.mq2macro" },
+				"2": { "patterns": [{ "include": "#constant-chat" }]}
+			},
+			"end": "(?=$)",
+			"patterns": [
+				{ "include": "#comment" },
+				{ "include": "#invalid-illegalcharacters" }
+			]
+		},
+		"invalid-illegalcharacters": {
+				"match": "\\S+",
+				"captures": {
+					"0": { "name": "invalid.illegal.mq2macro" }
+				}
+		},
+		"invalid-illegalcharacter": {
+			"match": "\\S",
+			"captures": {
+				"0": { "name": "invalid.illegal.mq2macro" }
+			}
+	},
+		"sub": {
+			"name": "meta.sub.mq2macro",
+			"begin": "^\\s*((?i)Sub)\\s+((?i)Event_)?([_[:alpha:]][_[:alnum:]]*)(\\([^\\)\\|]*\\))?",
+			"beginCaptures": {
+				"1": { "name": "keyword.other.mq2macro" },
+				"2": { "name": "keyword.other.mq2macro" },
+				"3": { "name": "entity.name.function.mq2macro"},
+				"4": { "patterns": [{ "include": "#parenthesized-parameter-list" }]}
+			},
+			"end": "^\\s*(\\/(?i)return\\b.*)(?=$)",
+			"endCaptures": {
+				"1": { "patterns": [{ "include": "#mq2slashcommand"}]}
+			},
+			"patterns": [{ "include": "#subbody" }]
+		},
+		"subbody": {
+			"patterns": [
+				{ "include": "#gotolabel"},
+				{ "include": "#mq2slashcommand-ifblock"},
+				{ "include": "#mq2slashcommand-forblock"},
+				{ "include": "#mq2slashcommand" },
+				{ "include": "#variabledelimiter"},
+				{ "include": "#comment" },
+				{ "include": "#invalid-illegalcharacters" }
+			]
+		},
+		"gotolabel":
+		{
+			"match": "^\\s*(:)([^\\s\\n\\r\\[\\|\\]]+)\\s*([^\\n\\r]*)\\s*(?=$)",
+			"captures": {
+				"1": { "name": "punctuation.parenthesis.open.mq2macro" },
+				"2": { "name": "markup.heading.mq2macro"},
+				"3": {"patterns": [
+					{"include": "#comment"},
+					{"include": "#invalid-illegalcharacters"}						
+				]}
+			}
+		},
+		"mq2slashcommand": {
+			"name": "meta.mq2slashcommand.mq2macro",
+			"begin": "\\s*(\\/)",
+			"beginCaptures": {
+				"1": {
+					"name": "punctuation.separator.fowardslash.mq2macro"
+				}
+			},
+			"end": "(?<=$)",
+			"patterns": [
+				{ "include": "#comment" },
+				{ "include": "#mq2slashcommand-aa"},
+				{ "include": "#mq2slashcommand-alias"},
+				{ "include": "#mq2slashcommand-alert"},
+				{ "include": "#mq2slashcommand-altctrshiftsquelch"},
+				{ "include": "#mq2slashcommand-bind"},
+				{ "include": "#mq2slashcommand-buyitem"},
+				{ "include": "#mq2slashcommand-call"},
+				{ "include": "#mq2slashcommand-declare"},
+				{ "include": "#mq2slashcommand-delay"},
+				{ "include": "#mq2slashcommand-doevents" },
+				{ "include": "#mq2slashcommand-echo" },
+				{ "include": "#mq2slashcommand-if" },
+				{ "include": "#mq2slashcommand-goto" },
+				{ "include": "#mq2slashcommand-return" },
+				{ "include": "#mq2slashcommand-singles" },
+				{ "include": "#mq2slashcommand-varcalc" },
+				{ "include": "#mq2slashcommand-vardata" },
+				{ "include": "#mq2slashcommand-varset" },
+				{ "include": "#mq2slashcommand-unsupported"},
+				{ "include": "#eqslashcommand-unsupported"},
+				{ "include": "#invalid-illegalcharacters" }
+			]
+		},
+		"mq2slashcommand-aa": {
+			"match": "\\b((?i)aa)\\b\\s*(\\b[^|]*)",
+			"captures": {
+				"1": { "name": "keyword.control.alert.mq2macro" },
+				"2": { "patterns": [
+					{
+						"match": "(?<=\\/aa )\\blist (all|timers)\\b",
+						"captures": { "0": {"name": "keyword.control.alert.mq2macro"}}
+					},
+					{
+						"match": "(?<=\\/aa )\\b(info|act)\\b\\s*((?<vb>\\s*\\${(?:[^\\$}]|\\g<vb>)+}\\s*))",
+						"captures": { 
+							"1": {"name": "keyword.control.alert.mq2macro"},
+							"2": {"patterns": [
+								{"include": "#variabledelimiter"}
+							]}
+						}
+					},
+					{
+						"match": "(?<=\\/aa )\\b(info|act)\\b\\s*([0-9]+)",
+						"captures": { 
+							"1": {"name": "keyword.control.alert.mq2macro"},
+							"2": {"name": "constant.numeric.mq2macro"}
+						}
+					},
+					{
+						"match": "(?<=\\/aa )\\b(info|act)\\b\\s*(\\b[ :_[:alnum:]]+)",
+						"captures": { 
+							"1": {"name": "keyword.control.alert.mq2macro"},
+							"2": {"name": "string.unquoted.mq2macro"}
+						}
+					},
+					{ "include": "#invalid-illegalcharacters" }
+					]}
+			}
+		},
+		"mq2slashcommand-alert": {
+			"match": "\\b((?i)alert)\\b\\s*(\\b[^|]*)",
+			"captures": {
+				"1": { "name": "keyword.control.alert.mq2macro" },
+				"2": { "patterns": [
+					{
+						"match": "(?<=\\/alert )\\b(clear|list)\\b\\s*(([0-9]+)|((?<vb>\\s*\\${(?:[^\\$}]|\\g<vb>)+}\\s*)))\\s*",
+						"captures": {
+							"1": { "name": "keyword.control.alert.clearlist.mq2macro" },
+							"3": { "name": "constant.numeric.int.mq2macro" },
+							"4": {"patterns": [
+								{"include": "#variabledelimiter"}
+							]}
+						}
+					},
+					{
+						"match": "(?<=\\/alert )\\b(add|remove)\\b\\s*(([0-9]+)|((?<vb>\\s*\\${(?:[^\\$}]|\\g<vb>)+}\\s*)))\\s*([^|]*)",
+						"captures": {
+							"1": { "name": "keyword.control.alert.addremove.mq2macro" },
+							"3": { "name": "constant.numeric.int.mq2macro" },
+							"4": {"patterns": [
+								{"include": "#variabledelimiter"},
+								{"include": "#invalid-illegalcharacters"}
+							]},
+							"6": {
+								"patterns": [
+									{
+										"match": "(?i)(\\b(pc|npc|corpse|any)\\b\\s*)?(((\\s*\\bradius\\b\\s*)(([0-9]+)|((?<vb>\\s*\\${(?:[^\\$}]|\\g<vb>)+}\\s*))))((\\s*\\brange\\b\\s*)(([0-9]+)|((?<rb>\\s*\\${(?:[^\\$}]|\\g<rb>)+}\\s*)))\\s+(([0-9]+)|((?<xrb>\\s*\\${(?:[^\\$}]|\\g<xrb>)+}\\s*))))?|((\\s*\\brange\\b\\s*)(([0-9]+)|((?<yrb>\\s*\\${(?:[^\\$}]|\\g<yrb>)+}\\s*)))\\s+(([0-9]+)|((?<brb>\\s*\\${(?:[^\\$}]|\\g<brb>)+}\\s*))))((\\s*\\bradius\\b\\s*)(([0-9]+)|((?<sb>\\s*\\${(?:[^\\$}]|\\g<sb>)+}\\s*))))?)?(\\s*\"[^\"|\\r\\n]*\")?([^|\\n\\r]*)(?=\\s*$)",
+										"captures": {
+											"2": {"name": "entity.name.type.mq2macro"},
+											"5": { "name": "keyword.control.alert.radius.mq2macro" },
+											"7": { "name": "constant.numeric.int.mq2macro" },
+											"8": {"patterns": [
+												{"include": "#variabledelimiter"}
+											]},
+											"11": { "name": "keyword.control.alert.range.mq2macro" },
+											"13": { "name": "constant.numeric.int.mq2macro" },
+											"14": {"patterns": [
+												{"include": "#variabledelimiter"}
+											]},
+											"17": { "name": "constant.numeric.int.mq2macro" },
+											"18": {"patterns": [
+												{"include": "#variabledelimiter"}
+											]},
+											"21": { "name": "keyword.control.alert.range.mq2macro" },
+											"23": { "name": "constant.numeric.int.mq2macro" },
+											"24": {"patterns": [
+												{"include": "#variabledelimiter"}
+											]},
+											"27": { "name": "constant.numeric.int.mq2macro" },
+											"28": {"patterns": [
+												{"include": "#variabledelimiter"}
+											]},
+											"31": { "name": "keyword.control.alert.radius.mq2macro" },
+											"33": { "name": "constant.numeric.int.mq2macro" },
+											"34": {"patterns": [
+												{"include": "#variabledelimiter"}
+											]},
+											"36": {"name": "string.quoted.mq2macro"},
+											"37": {"patterns": [
+												{"include": "#invalid-illegalcharacters"}
+											]}
+										}					
+									},
+									{"include": "#invalid-illegalcharacters"}
+								]
+							}
+						}
+					},
+					{ "include": "#invalid-illegalcharacters" }
+				]}
+			}
+		},
+		"mq2slashcommand-alias": {
+			"match": "\\b((?i)alias)\\b\\s*([^|]*)",
+			"captures": {
+				"1": { "name": "keyword.control.alert.mq2macro" },
+				"2": { "patterns": [
+						{
+							"match": "(?i)(?<=\\/alias )\\s*\\b(list)\\b",
+							"captures": {
+								"1": { "name": "keyword.control.alias.list.mq2macro" }
+							}
+						},
+						{
+							"match": "(?i)(?<=\\/alias )\\s*(\\/[^\\r\\n\\s]+)\\s*((\\bdelete)|([^|\\r\\n]*))(?=\\s*$)",
+							"captures": {
+								"1": { "name": "entity.name.variable.mq2macro" },
+								"3": { "name": "keyword.control.alias.delete.mq2macro" },
+								"4": {"patterns": [{"include": "#mq2slashcommand"}]}
+							}
+						},
+						{"include": "#invalid-illegalcharacters"}
+					]
+				}
+			}
+		},
+		"mq2slashcommand-altctrshiftsquelch": {
+			"match": "(?i)\\b(squelch|ctrlkey|altkey|shiftkey|nomodkey|noparse)\\b\\s+(\\/[^|]*)",
+			"captures": {
+				"1": { "name": "keyword.control.squelch.mq2macro" },
+				"2": {"patterns": [{"include": "#mq2slashcommand"}]}
+			}
+		},
+		"mq2slashcommand-bind": {
+			"match": "\\b((?i)bind)\\b\\s*([^\\n\\r]*)",
+			"captures": {
+				"1": { "name": "keyword.control.alert.mq2macro" },
+				"2": { "patterns": [
+						{
+							"match": "(?i)(?<=\\/bind )\\s*\\b(list|eqlist)\\b([^\\n\\r]*)(?=\\s*$)",
+							"captures": {
+								"1": { "name": "keyword.control.bind.eqlist.mq2macro" },
+								"2": {"patterns": [
+									{"include": "#comment"},
+									{"include": "#invalid-illegalcharacters"}
+									]}
+							}
+						},
+						{
+							"match": "(?i)\\s*(~)?([^\\n\\r\\s]*)\\s+((\\bclear)(\\s+[^\\n\\r]*)?|((alt|shift|ctrl)(\\+))?((alt|shift|ctrl)(\\+))?((alt|shift|ctrl)(\\+))?([\\S]+)(\\s+[^\\n\\r]*)?)(?=\\s*$)",
+							"captures": {
+								"1": { "name": "keyword.operator.tilda.mq2macro" },
+								"2": { "name": "support.variable.mq2macro" },
+								"4": { "name": "keyword.control.bind.eqlist.mq2macro" },
+								"5": {"patterns": [
+									{"include": "#comment"},
+									{"include": "#invalid-illegalcharacters"}
+									]},
+								"7": { "name": "keyword.other.mq2macro" },
+								"8": { "name": "keyword.operator.plus.mq2macro" },
+								"10": { "name": "keyword.other.mq2macro" },
+								"11": { "name": "keyword.operator.plus.mq2macro" },
+								"13": { "name": "keyword.other.mq2macro" },
+								"14": { "name": "keyword.operator.tilda.mq2macro" },
+								"15": { "name": "keyword.other.mq2macro" },
+								"16": {"patterns": [
+									{"include": "#comment"},
+									{"include": "#invalid-illegalcharacters"}
+									]}
+								}
+						},
+						{"include": "#invalid-illegalcharacters"}
+					]
+				}
+			}
+		},
+		"mq2slashcommand-buyitem": {
+			"match": "\\b((?i)buyitem)\\b\\s*([0-9]+)",
+			"captures": {
+				"1": { "name": "keyword.control.alert.mq2macro" },
+				"2": { "name": "constant.numeric.int.mq2macro" }
+			}
+		},
+		"mq2slashcommand-call": {
+			"match": "\\b((?i)call)\\b([^\\n\\r]*)",
+			"captures": {
+				"1": { "name": "keyword.control.alert.mq2macro" },
+				"2": { "patterns": [
+						{
+							"begin": "(?<=\\/call)\\s+(?i)(Event_)?",
+							"beginCaptures": { 
+								"1": {"name": "keyword.other.mq2macro"}
+							},
+							"end": "(?<=[\\S])(?=\\s)",
+							"patterns": [
+								{"include": "#constantdecimal"},
+								{"include": "#constantbool"},
+								{"include": "#variabledelimiter"},
+								{"include": "#subnamepartial"},
+								{"include": "#comment"},
+								{"include": "#invalid-illegalcharacters"}	
+							]
+						},
+						{"include": "#spacedelimiter"}
+					]
+				}
+			}
+		},
+		"mq2slashcommand-declare": {
+			"match": "\\b((?i)declare)\\b([^\\n\\r\\|]*)",
+			"captures": {
+				"1": { "name": "keyword.control.alert.mq2macro" },
+				"2": { "patterns": [
+						{
+							"match": "(?i)(?<=\\\/declare)\\s+([^\\s\\n\\r\\[\\|\\]]+)((?<vb>\\[(?:[^\\[\\]]|\\g<vb>)+\\])?)?(\\s+(?!(local|global|outer))([[:alpha:]]+))?(\\s+(local|global|outer))?(\\s+([^\\\"\\s\\n\\r\\|]+|\"[^\\n\\r\\|]*\"))?",
+							"captures": { 
+								"1": {"name": "entity.name.variable.parameter.mq2macro"},
+								"2": {"patterns": [{"include": "#sqbracketdelimiter"}]},
+								"6": {"patterns": [
+										{"include": "#type-reference"},
+										{"include": "#type-immediate"},
+										{"include": "#spacedelimiter"}
+									]
+								},
+								"8": {"name": "keyword.control.alert.mq2macro" },
+								"9": {"patterns": [{"include": "#spacedelimiter"}]}
+							}
+						},
+						{"include": "#comment"},
+						{"include": "#invalid-illegalcharacters"}	
+					]
+				}
+			}
+		},
+		"mq2slashcommand-varset": {
+			"match": "\\b((?i)varset)\\b([^\\n\\r\\|]*)",
+			"captures": {
+				"1": { "name": "keyword.control.alert.mq2macro" },
+				"2": { "patterns": [
+						{
+							"match": "(?i)(?<=\\\/varset)\\s+([^\\s\\n\\r\\[\\|\\]]+)((?<vb>\\[(?:[^\\[\\]]|\\g<vb>)+\\])?)?(\\s+(((<<|>>|-))?(\\d*\\.?\\d+)|((\\!|<<|>>|-))?((?<pb>\\((?:[^\\(\\)]|\\g<pb>)+\\)))|((\\!|<<|>>|-|=))?(((?<bb>\\$\\{(?:[^\\$\\}]|\\g<bb>)+\\})|[ '\\.:_\\-[:alnum:]])+)|(\\!)?(true|false)|(null)|(=?)([_[:alpha:]][ '\\.:_\\-[:alnum:]]*)|(=?)(\"[_[:alpha:]][ '\\.:_\\-[:alnum:]]*\"))((\\()(argb|bool|body|byte|class|corpse|deity|float|heading|int|invslot|ticks|race|raidmember)(\\)))?)",
+							"captures": { 
+								"1": {"name": "entity.name.variable.parameter.mq2macro"},
+								"2": {"patterns": [{"include": "#sqbracketdelimiter"},{"include": "#invalid-illegalcharacter"}]},
+								"4": {"patterns": [{"include": "#spacedelimiter"},{"include": "#invalid-illegalcharacter"}]}
+							}
+						},
+						{"include": "#comment"},
+						{"include": "#invalid-illegalcharacters"}	
+					]
+				}
+			}
+		},
+		"mq2slashcommand-vardata": {
+			"match": "\\b((?i)vardata)\\b([^\\n\\r\\|]*)",
+			"captures": {
+				"1": { "name": "keyword.control.alert.mq2macro" },
+				"2": { "patterns": [
+						{
+							"match": "(?i)(?<=\\\/vardata)\\s+([^\\s\\n\\r\\[\\|\\]]+)((?<vb>\\[(?:[^\\[\\]]|\\g<vb>)+\\])?)?\\s+([^|]*)",
+							"captures": { 
+								"1": {"name": "entity.name.variable.parameter.mq2macro"},
+								"2": {"patterns": [{"include": "#sqbracketdelimiter"},{"include": "#invalid-illegalcharacter"}]},
+								"4": {"patterns": [{"include": "#variable"},{"include": "#invalid-illegalcharacter"}]}
+							}
+						},
+						{"include": "#comment"},
+						{"include": "#invalid-illegalcharacters"}	
+					]
+				}
+			}
+		},
+		"mq2slashcommand-varcalc": {
+			"match": "\\b((?i)varcalc)\\b([^\\n\\r\\|]*)",
+			"captures": {
+				"1": { "name": "keyword.control.alert.mq2macro" },
+				"2": { "patterns": [
+						{
+							"match": "(?i)(?<=\\\/varcalc)\\s+([^\\s\\n\\r\\[\\|\\]]+)((?<vb>\\[(?:[^\\[\\]]|\\g<vb>)+\\])?)?\\s+([^|]*)",
+							"captures": { 
+								"1": {"name": "entity.name.variable.parameter.mq2macro"},
+								"2": {"patterns": [{"include": "#sqbracketdelimiter"},{"include": "#invalid-illegalcharacter"}]},
+								"4": {"patterns": [{"include": "#formula"},{"include": "#invalid-illegalcharacter"}]}
+							}
+						},
+						{"include": "#comment"},
+						{"include": "#invalid-illegalcharacters"}	
+					]
+				}
+			}
+		},
+		"mq2slashcommand-doevents": {
+			"begin": "\\b((?i)doevents)\\b\\s*(\\b[_[:alpha:]][_[:alnum:]]*\\b)?\\s*",
+			"captures": {
+				"1": { "name": "keyword.control.doevents.mq2macro" },
+				"2": { "patterns": [
+					{ "include": "#constant-chat" },
+					{
+						"match": "\\b(flush)\\b",
+						"captures": {
+							"0": { "name": "keyword.control.doevents.flush.mq2macro" }
+						}
+					},
+					{
+						"match": "\\b([_[:alpha:]][_[:alnum:]]*)\\b",
+						"captures": {
+							"0": { "name": "entity.name.variable.preprocessor.symbol.mq2macro" }
+						}
+					}
+				]}
+			},
+			"end": "(?=$)",
+			"patterns": [
+				{ "include": "#comment" },
+				{ "include": "#invalid-illegalcharacters" }
+			]
+		},
+		"mq2slashcommand-delay": {
+			"match": "(?i)(delay)\\s+(([0-9]+)|((?<bb>\\$\\{(?:[^\\$\\}]|\\g<bb>)+\\})))(m|s)?(\\s+[^|]*)?",
+			"captures": {
+				"1": { "name": "keyword.control.alert.mq2macro" },
+				"3": { "name": "constant.numeric.mq2macro"},
+				"4": {"patterns": [{"include": "#variabledelimiter"},{"include": "#invalid-illegalcharacter"}]},
+				"6": { "name": "keyword.control.alert.mq2macro" },
+				"7": {"patterns": [{"include": "#formula"},{"include": "#invalid-illegalcharacter"}]}
+			}
+		},
+		"mq2slashcommand-echo": {
+			"begin": "(?i)(echo)\\b",
+			"beginCaptures": {"1": { "name": "keyword.control.alert.mq2macro" }},
+			"end": "(?<=$)",
+			"patterns": [
+				{ "include": "#variabledelimiter"},
+				{ "include": "#echosubstring"}
+			]
+		},
+		"mq2slashcommand-if": {
+			"patterns": [
+				{
+					"match": "(?i)(if)\\s+((?<vb>\\((?:[^\\(\\)]|\\g<vb>)+\\)))\\s+(\\/[^\\n\\r]+)(?=$)",
+					"captures": {
+						"1": { "name": "keyword.control.alert.mq2macro" },
+						"2": {"patterns": [{"include": "#formula-par"},{"include": "#invalid-illegalcharacter"}]},
+						"4": {"patterns": [{"include": "#mq2slashcommand"},{"include": "#invalid-illegalcharacter"}]}
+					}
+				}	
+			]
+		},
+		"mq2slashcommand-ifblock": {
+			"begin": "(?i)\\s*(((?<=}) (else) )|((?<=}) (else) )?((\\\/)(if)\\s+((?<vb>\\((?:[^\\(\\)]|\\g<vb>)+\\))) ))({)",
+			"beginCaptures": {
+				"3": { "name": "keyword.control.alert.mq2macro" },
+				"5": { "name": "keyword.control.alert.mq2macro" },
+				"7": { "name": "punctuation.parenthesis.open.mq2macro" },
+				"8": { "name": "keyword.control.alert.mq2macro" },
+				"9": {"patterns": [{"include": "#formula-par"},{"include": "#invalid-illegalcharacter"}]},
+				"11": { "name": "punctuation.parenthesis.open.mq2macro" }
+			},
+			"end": "\\s*}",
+			"endCaptures": {"0": {"name": "punctuation.parenthesis.open.mq2macro"}},
+			"patterns": [
+				{"include": "#subbody"},
+				{"include": "#invalid-illegalcharacter"}	
+			]
+		},
+		"mq2slashcommand-forblock": {
+			"begin": "(?i)\\s*(\\\/)(for)\\s+([^\\s\\n\\r\\[\\|\\]]+)((?<vb>\\[(?:[^\\[\\]]|\\g<vb>)+\\]))?\\s+(([0-9]+)|((?<bb>\\$\\{(?:[^\\$\\}]|\\g<bb>)+\\})))\\s+((down)?to)\\s+(([0-9]+)|((?<gb>\\$\\{(?:[^\\$\\}]|\\g<gb>)+\\})))(\\s+(step)\\s+(([0-9]+)|((?<xb>\\$\\{(?:[^\\$\\}]|\\g<xb>)+\\}))))?",
+			"beginCaptures": {
+				"1": { "name": "punctuation.parenthesis.open.mq2macro" },
+				"2": { "name": "keyword.control.for.mq2macro" },
+				"3": {"name": "entity.name.variable.parameter.mq2macro"},
+				"4": {"patterns": [{"include": "#sqbracketdelimiter"},{"include": "#invalid-illegalcharacter"}]},
+				"7": { "name": "constant.numeric.mq2macro"},
+				"8": {"patterns": [{"include": "#variabledelimiter"},{"include": "#invalid-illegalcharacter"}]},
+				"10": { "name": "keyword.control.for.mq2macro" },
+				"13": { "name": "constant.numeric.mq2macro"},
+				"14": {"patterns": [{"include": "#variabledelimiter"},{"include": "#invalid-illegalcharacter"}]},
+				"17": { "name": "keyword.control.for.mq2macro" },
+				"19": { "name": "constant.numeric.mq2macro"},
+				"20": {"patterns": [{"include": "#variabledelimiter"},{"include": "#invalid-illegalcharacter"}]}
+			},
+			"end": "(?i)\\s*(\\\/)(next)\\s+([^\\s\\n\\r\\[\\|\\]]+)((?<vb>\\[(?:[^\\[\\]]|\\g<vb>)+\\]))?",
+			"endCaptures": {
+				"1": { "name": "punctuation.parenthesis.open.mq2macro" },
+				"2": { "name": "keyword.control.next.mq2macro" },
+				"3": {"name": "entity.name.variable.parameter.mq2macro"},
+				"4": {"patterns": [{"include": "#sqbracketdelimiter"},{"include": "#invalid-illegalcharacter"}]}
+			},
+			"patterns": [
+				{"include": "#subbody"},
+				{"include": "#invalid-illegalcharacter"}	
+			]
+		},
+		"mq2slashcommand-goto":
+		{
+			"match": "(?i)(goto)\\s+(:)([^\\s\\n\\r\\[\\|\\]]+)\\s*([^\\n\\r]*)\\s*(?=$)",
+			"captures": {
+				"1": { "name": "keyword.control.next.mq2macro" },
+				"2": { "name": "punctuation.colon.mq2macro" },
+				"3": { "name": "markup.heading.mq2macro"},
+				"4": {"patterns": [
+					{"include": "#comment"},
+					{"include": "#invalid-illegalcharacters"}						
+				]}
+			}
+		},
+		"formula-par": {
+			"begin": "\\s*\\(",
+			"beginCaptures": {"0": {"name": "punctuation.parenthesis.open.mq2macro"}},
+			"end": "\\s*\\)",
+			"endCaptures": {"0": {"name": "punctuation.parenthesis.open.mq2macro"}},
+			"patterns": [
+				{"include": "#formula"},
+				{"include": "#invalid-illegalcharacter"}	
+			]
+		},
+		"formula": {
+			"patterns": [
+				{"include": "#formula-end"},
+				{"include": "#formula-join"},
+				{"include": "#formula-operand"},
+				{"include": "#formula-par"},
+				{"include": "#formula-compare"},
+				{"include": "#invalid-illegalcharacter"}	
+			]
+		},
+		"formula-right": {
+			"patterns": [
+				{"include": "#formula-end"},
+				{"include": "#formula-join-right"},
+				{"include": "#formula-operand-right"},
+				{"include": "#formula-par"},
+				{"include": "#invalid-illegalcharacter"}	
+			]
+		},
+		"formula-join": {
+			"match": "(?i)\\s*(((<<|>>|-))?(\\d*\\.?\\d+)|((\\!|<<|>>|-))?((?<pb>\\((?:[^\\(\\)]|\\g<pb>)+\\)))|((\\!|<<|>>|-))?((?<vb>\\$\\{(?:[^\\$\\}]|\\g<vb>)+\\}))|(\\!)?(true|false)|(null))((\\()(argb|bool|body|byte|class|corpse|deity|float|heading|int|invslot|ticks|race|raidmember)(\\)))?\\s*(\\|\\||&&)\\s*(?=([^\\(\\s\\)])+|\\()",
+			"captures":
+			{
+				"3": {"name": "keyword.operator.mq2macro"},
+				"4": {"patterns": [{"include": "#constantdecimal"},{"include": "#invalid-illegalcharacter"}]},
+				"6": {"name": "keyword.operator.mq2macro"},
+				"7": {"patterns": [{"include": "#formula-par"},{"include": "#invalid-illegalcharacter"}]},
+				"10": {"name": "keyword.operator.mq2macro"},
+				"11": {"patterns": [{"include": "#variabledelimiter"},{"include": "#invalid-illegalcharacter"}]},
+				"13": {"name": "keyword.operator.mq2macro"},
+				"14": {"patterns": [{"include": "#constantbool"},{"include": "#invalid-illegalcharacter"}]},
+				"15": {"name": "constant.language.truefalse.mq2macro"},
+				"17": {"name": "punctuation.separator.plusminus.mq2macro"},
+				"18": {"name": "support.type.immediate.mq2macro" },
+				"19": {"name": "punctuation.separator.plusminus.mq2macro"},
+				"20": {"name": "keyword.operator.mq2macro"}
+			}
+		},
+		"formula-end": {
+			"match": "(?i)\\s*(((<<|>>|-))?(\\d*\\.?\\d+)|((\\!|<<|>>|-))?((?<pb>\\((?:[^\\(\\)]|\\g<pb>)+\\)))|((\\!|<<|>>|-))?((?<vb>\\$\\{(?:[^\\$\\}]|\\g<vb>)+\\}))|(\\!)?(true|false)|(null))((\\()(argb|bool|body|byte|class|corpse|deity|float|heading|int|invslot|ticks|race|raidmember)(\\)))?\\s*((?=[\\)])|(?=[\\]])|(?=$))",
+			"captures":
+			{
+				"3": {"name": "keyword.operator.mq2macro"},
+				"4": {"patterns": [{"include": "#constantdecimal"},{"include": "#invalid-illegalcharacter"}]},
+				"6": {"name": "keyword.operator.mq2macro"},
+				"7": {"patterns": [{"include": "#formula-par"},{"include": "#invalid-illegalcharacter"}]},
+				"10": {"name": "keyword.operator.mq2macro"},
+				"11": {"patterns": [{"include": "#variabledelimiter"},{"include": "#invalid-illegalcharacter"}]},
+				"13": {"name": "keyword.operator.mq2macro"},
+				"14": {"patterns": [{"include": "#constantbool"},{"include": "#invalid-illegalcharacter"}]},
+				"15": {"name": "constant.language.truefalse.mq2macro"},
+				"17": {"name": "punctuation.separator.plusminus.mq2macro"},
+				"18": {"name": "support.type.immediate.mq2macro" },
+				"19": {"name": "punctuation.separator.plusminus.mq2macro"}
+
+			}
+		},
+		"formula-operand": {
+			"match": "(?i)\\s*(((<<|>>|-))?(\\d*\\.?\\d+)|((\\!|<<|>>|-))?((?<pb>\\((?:[^\\(\\)]|\\g<pb>)+\\)))|((\\!|<<|>>|-))?((?<vb>\\$\\{(?:[^\\$\\}]|\\g<vb>)+\\}))|(\\!)?(true|false)|(null))((\\()(argb|bool|body|byte|class|corpse|deity|float|heading|int|invslot|ticks|race|raidmember)(\\)))?\\s*(\\+|-|\\\\|\\\/|\\*|%|\\^|&(?!&)|\\|(?!\\|)|~|\\^\\^)\\s*(?=([^\\(\\s\\)])+|\\()",
+			"captures":
+			{
+				"3": {"name": "keyword.operator.mq2macro"},
+				"4": {"patterns": [{"include": "#constantdecimal"},{"include": "#invalid-illegalcharacter"}]},
+				"6": {"name": "keyword.operator.mq2macro"},
+				"7": {"patterns": [{"include": "#formula-par"},{"include": "#invalid-illegalcharacter"}]},
+				"10": {"name": "keyword.operator.mq2macro"},
+				"11": {"patterns": [{"include": "#variabledelimiter"},{"include": "#invalid-illegalcharacter"}]},
+				"13": {"name": "keyword.operator.mq2macro"},
+				"14": {"patterns": [{"include": "#constantbool"},{"include": "#invalid-illegalcharacter"}]},
+				"15": {"name": "constant.language.truefalse.mq2macro"},
+				"17": {"name": "punctuation.separator.plusminus.mq2macro"},
+				"18": {"name": "support.type.immediate.mq2macro" },
+				"19": {"name": "punctuation.separator.plusminus.mq2macro"},
+				"20": {"name": "keyword.operator.mq2macro"}
+			}
+		},
+		"formula-operand-right": {
+			"match": "(?i)\\s*(((<<|>>|-))?(\\d*\\.?\\d+)|((\\!|<<|>>|-))?((?<pb>\\((?:[^\\(\\)]|\\g<pb>)+\\)))|((\\!|<<|>>|-))?((?<vb>\\$\\{(?:[^\\$\\}]|\\g<vb>)+\\}))|(\\!)?(true|false)|(null))((\\()(argb|bool|body|byte|class|corpse|deity|float|heading|int|invslot|ticks|race|raidmember)(\\)))?\\s*(\\+|-|\\\\|\\\/|\\*|%|\\^|&(?![&])|\\|(?![\\|])|~|\\^\\^)\\s*(([^\\(\\)]|((?<hb>\\((?:[^\\(\\)]|\\g<hb>)+\\))))+)",
+			"captures":
+			{
+				"3": {"name": "keyword.operator.mq2macro"},
+				"4": {"patterns": [{"include": "#constantdecimal"},{"include": "#invalid-illegalcharacter"}]},
+				"6": {"name": "keyword.operator.mq2macro"},
+				"7": {"patterns": [{"include": "#formula-par"},{"include": "#invalid-illegalcharacter"}]},
+				"10": {"name": "keyword.operator.mq2macro"},
+				"11": {"patterns": [{"include": "#variabledelimiter"},{"include": "#invalid-illegalcharacter"}]},
+				"13": {"name": "keyword.operator.mq2macro"},
+				"14": {"patterns": [{"include": "#constantbool"},{"include": "#invalid-illegalcharacter"}]},
+				"15": {"name": "constant.language.truefalse.mq2macro"},
+				"17": {"name": "punctuation.separator.plusminus.mq2macro"},
+				"18": {"name": "support.type.immediate.mq2macro" },
+				"19": {"name": "punctuation.separator.plusminus.mq2macro"},
+				"20": {"name": "keyword.operator.mq2macro"},
+				"21": {"patterns": [{"include": "#formula-right"},{"include": "#invalid-illegalcharacter"}]}
+			}
+		},
+		"formula-join-right": {
+			"match": "(?i)\\s*(((<<|>>|-))?(\\d*\\.?\\d+)|((\\!|<<|>>|-))?((?<pb>\\((?:[^\\(\\)]|\\g<pb>)+\\)))|((\\!|<<|>>|-))?((?<vb>\\$\\{(?:[^\\$\\}]|\\g<vb>)+\\}))|(\\!)?(true|false)|(null))((\\()(argb|bool|body|byte|class|corpse|deity|float|heading|int|invslot|ticks|race|raidmember)(\\)))?\\s*(&&|\\|\\|)\\s*(([^\\(\\)]|((?<hb>\\((?:[^\\(\\)]|\\g<hb>)+\\))))+)",
+			"captures":
+			{
+				"3": {"name": "keyword.operator.mq2macro"},
+				"4": {"patterns": [{"include": "#constantdecimal"},{"include": "#invalid-illegalcharacter"}]},
+				"6": {"name": "keyword.operator.mq2macro"},
+				"7": {"patterns": [{"include": "#formula-par"},{"include": "#invalid-illegalcharacter"}]},
+				"10": {"name": "keyword.operator.mq2macro"},
+				"11": {"patterns": [{"include": "#variabledelimiter"},{"include": "#invalid-illegalcharacter"}]},
+				"13": {"name": "keyword.operator.mq2macro"},
+				"14": {"patterns": [{"include": "#constantbool"},{"include": "#invalid-illegalcharacter"}]},
+				"15": {"name": "constant.language.truefalse.mq2macro"},
+				"17": {"name": "punctuation.separator.plusminus.mq2macro"},
+				"18": {"name": "support.type.immediate.mq2macro" },
+				"19": {"name": "punctuation.separator.plusminus.mq2macro"},
+				"20": {"name": "keyword.operator.mq2macro"},
+				"21": {"patterns": [{"include": "#formula"},{"include": "#invalid-illegalcharacter"}]}
+			}
+		},
+		"formula-compare": {
+			"match": "(?i)\\s*(((<<|>>|-))?(\\d*\\.?\\d+)|((\\!|<<|>>|-))?((?<pb>\\((?:[^\\(\\)]|\\g<pb>)+\\)))|((\\!|<<|>>|-))?((?<vb>\\$\\{(?:[^\\$\\}]|\\g<vb>)+\\}))|(\\!)?(true|false)|(null))((\\()(argb|bool|body|byte|class|corpse|deity|float|heading|int|invslot|ticks|race|raidmember)(\\)))?\\s*(>=|<=|<|>|==|!=)\\s*(([^\\(\\)]|((?<hb>\\((?:[^\\(\\)]|\\g<hb>)+\\))))+)",
+			"captures":
+			{
+				"3": {"name": "keyword.operator.mq2macro"},
+				"4": {"patterns": [{"include": "#constantdecimal"},{"include": "#invalid-illegalcharacter"}]},
+				"6": {"name": "keyword.operator.mq2macro"},
+				"7": {"patterns": [{"include": "#formula-par"},{"include": "#invalid-illegalcharacter"}]},
+				"10": {"name": "keyword.operator.mq2macro"},
+				"11": {"patterns": [{"include": "#variabledelimiter"},{"include": "#invalid-illegalcharacter"}]},
+				"13": {"name": "keyword.operator.mq2macro"},
+				"14": {"patterns": [{"include": "#constantbool"},{"include": "#invalid-illegalcharacter"}]},
+				"15": {"name": "constant.language.truefalse.mq2macro"},
+				"17": {"name": "punctuation.separator.plusminus.mq2macro"},
+				"18": {"name": "support.type.immediate.mq2macro" },
+				"19": {"name": "punctuation.separator.plusminus.mq2macro"},
+				"20": {"name": "keyword.operator.mq2macro"},
+				"21": {"patterns": [{"include": "#formula-right"},{"include": "#invalid-illegalcharacter"}]}
+			}
+		},
+		"ifformula-varleftside": {
+			"match": "(?i)\\s*(\\!)?((?<vb>\\$\\{(?:[^\\$\\}]|\\g<vb>)+\\})?)\\s*(>=|<=|<|>|==|!=)\\s*([^\\n\\r\\(])*",
+			"captures": {
+				"4": {"patterns": [{"include": "#mq2slashcommand"}]}
+
+			}
+		},
+		"ifformula-boolcompare": {
+			"match": "(?i)(?<=[\\&\\|\\(])\\s*((\\!)?((?<vb>\\$\\{(?:[^\\$\\}]|\\g<vb>)+\\})?)|true|false)(\\s*(==|!=)\\s*((\\!)?((?<gvb>\\$\\{(?:[^\\$\\}]|\\g<gvb>)+\\})?)|true|false))?\\s*(\\&\\&|\\|\\||(?=\\)))",
+			"captures": {"0": {
+			"patterns": [
+				{"include": "#variabledelimiter"},
+				{"include": "#constantbool"},
+				{"include": "#operators"},
+				{"include": "#invalid-illegalcharacter"}
+			]}}
+		},
+		"mq2slashcommand-returnold": {
+			"begin": "\\b((?i)return)\\b\\s*(\\b[[:alnum:]]+\\b|\\b[_[:alpha:]][_[:alnum:]]*\\b)?\\s*",
+			"beginCaptures": {
+				"1": { "name": "keyword.control.return.mq2macro" },
+				"2": { "patterns": [
+					{
+						"match": "\\b([0-9]+|[0-9]*\\.[0-9]+)\\b",
+						"captures": {
+							"0": { "name": "constant.numeric.decimal.mq2macro" }
+						}
+					},
+					{
+						"match": "\\b([_[:alpha:]][_[:alnum:]]*)\\b",
+						"captures": {
+							"0": { "name": "string.unquoted.mq2macro" }
+						}
+					}
+				]}
+			},
+			"end": "(?=$)",
+			"patterns": [
+				{ "include": "#comment" },
+				{ "include": "#invalid-illegalcharacters" }
+			]
+		},
+		"mq2slashcommand-return": {
+			"match": "\\b((?i)return)\\b([^\\n\\r\\|]*)",
+			"captures": {
+				"1": { "name": "keyword.control.alert.mq2macro" },
+				"2": { "patterns": [
+						{
+							"match": "(?i)(?<=\\\/return)(\\s+(((<<|>>|-))?(\\d*\\.?\\d+)|((\\!|<<|>>|-))?((?<pb>\\((?:[^\\(\\)]|\\g<pb>)+\\)))|((\\!|<<|>>|-|=))?(((?<bb>\\$\\{(?:[^\\$\\}]|\\g<bb>)+\\})|[ '\\.:_\\-[:alnum:]])+)|(\\!)?(true|false)|(null)|(=?)([_[:alpha:]][ '\\.:_\\-[:alnum:]]*)|(=?)(\"[_[:alpha:]][ '\\.:_\\-[:alnum:]]*\"))((\\()(argb|bool|body|byte|class|corpse|deity|float|heading|int|invslot|ticks|race|raidmember)(\\)))?)",
+							"captures": { 
+								"1": {"patterns": [{"include": "#spacedelimiter"},{"include": "#invalid-illegalcharacter"}]}
+							}
+						},
+						{"include": "#comment"},
+						{"include": "#invalid-illegalcharacters"}	
+					]
+				}
+			}
+		},
+		"mq2slashcommand-unsupported": {
+			"match": "(?i)\\b(stick)\\b([^\\n\\r\\|]*)",
+			"captures": {
+				"1": { "name": "support.function.alert.mq2macro" },
+				"2": {"patterns": [{"include": "#spacedelimiter"},{"include": "#invalid-illegalcharacter"}]}
+			}
+		},
+		"eqslashcommand-unsupported": {
+			"match": "(?i)\\b(adriver|afk|alt|alternateadv|anon|assist|auction|autoinventory|autosplit|betabuff|Baz|book|bug|camp|cast|channel|charinfo|chatfontsize|claim|consent|clearchat|clearhits|consider|combatmusic|corpsedrag|corpsedrop|corpse|clearmarks|decline|deny|deletepetition|disband|discipline|dismount|doability|dopropertinting|duck|dual|dynamiclights|emote|facepick|exit|fastdrop|feedback|filter|find|findpc|follow|fontface|gmarknpc|friend|gsay|gems|guidehelp|guilddelete|guildinvite|getguildmotd|guildpeace|guildleader|guildremove|guildsay|guildstatus|guildwar|help|hidecorpse|ignore|hotbutton|inspect|inspectbuffs|indicator|invite|keys|invwinlabels|language|lfg|log|loadskin|loc|loot|makeleader|lootnodrop|mcicontrol|memspellset|marknpc|mixahead|mousespeed|msg|mp3|movelog|motd|note|open|outputfile|ooc|particledensity|pet|pause|petition|played|quit|random|reply|report|resetwindows|reverb|reversesound|roleplay|rmarknpc|rtarget|rewind|say|sdriver|serverfilter|shadow|shield|shout|showgrass|shownames|shownpcnames|showspelleffects|stand|stoptracking|stopcast|stopsong|sit|split|surname|tell|target|time|toggleinspect|trackfilter|tracksort|targetgroupbuff|trackplayers|trader|testbuffme|ttell|usecolor|viewport|vgroup|viewpetition|vrdelay|vplay|vraid|vtell|who|whotarget|wincolor|yell)\\b([^\\n\\r\\|]*)",
+			"captures": {
+				"1": { "name": "support.function.alert.mq2macro" },
+				"2": {"patterns": [{"include": "#spacedelimiter"},{"include": "#invalid-illegalcharacter"}]}
+			}
+		},
+		"mq2slashcommand-singles": {
+			"match": "(?i)\\b(banklist|beep|break|charinfo|cleanup|cleanerrors|continue|defaulthud|destroy|drop|endmacro|identify|location|loginname|setautorun|unload|updateitems)\\b",
+			"captures": {
+				"1": { "name": "keyword.control.squelch.mq2macro" }
+			}
+		},
+		"parenthesized-parameter-list": {
+			"begin": "(\\()",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.parenthesis.open.mq2macro"
+				}
+			},
+			"end": "(\\))",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.parenthesis.close.mq2macro"
+				}
+			},
+			"patterns": [
+				{ "include": "#parameter" },
+				{ "include": "#parameterwithtype" },
+				{ "include": "#punctuation-comma" }
+			]
+		},
+		"parameter": {
+			"match":"(?<=[\\(,])\\s*\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*(?=[\\),])",
+			"captures": {
+				"1": {"name": "entity.name.variable.parameter.mq2macro" }
+			}
+		},
+		"parameterwithtype": {
+			"match":"(?<=[\\(,])\\s*\\b([[:alpha:]]+)\\b\\s*\\b([_[:alpha:]][_[:alnum:]]*)\\b\\s*(?=[\\),])",
+			"captures": {
+				"1": {
+					"patterns": [
+						{ "include": "#type-immediate" },
+						{ "include": "#type-reference" },
+						{ "include": "#invalid-illegalcharacters" }
+					]
+				},
+				"2": {"name": "entity.name.variable.parameter.mq2macro" }
+			}
+		},
+		"type-immediate": {
+			"match": "\\b(argb|bool|body|byte|class|corpse|deity|float|heading|int|invslot|ticks|race|raidmember)\\b",
+			"captures": {
+				"1": { "name": "support.type.immediate.mq2macro" }
+			}
+		},
+		"toplevelobjectvariable": {
+			"match": "(?<=\\{)\\s*\\b(AltAbility|Bool|Me|Corpse|Cursor|Defined|Ground|FindItem|FindItemBank|FindItemBankCount|FindItemCount|Float|GameTime|Group|GroupLeader|GroupLeaderName|Heading|If|Ini|Int|InvSlot|LastSpawn|LineOfSight|Macro|MacroQuest|Math|Merchant|NamingSpawn|NearestSpawn|Plugin|Raid|SelectedItem|Skill|Spawn|SpawnCount|Spell|String|Switch|Target|Time|Type|Window|Zone)\\b",
+			"captures": {
+				"1": { "name": "variable.language.mq2macro" }
+			}
+		},
+		"type-reference": {
+			"match": "\\b(altability|array|buff|character|ground|item|plugin|skill|spawn|spell|string|switch|time|timer|type|window|zone)\\b",
+			"captures": {
+				"1": {
+					"name": "support.class.reference.mq2macro"
+				}
+			}
+		},
+		"constant-chat": {
+			"match": "\\b((auc|chat|guild|group|ooc|say|shout|tell))\\b",
+			"captures": {
+				"1": { "name": "entity.name.type.mq2macro" }
+			}
+		},
+		"variabledelimiterold": {
+			"match": "(!?)((?<vb>(\\${)((?:[^\\$}]|\\g<vb>)+)(})))",
+			"captures": {
+				"1": {"name": "keyword.operator.bang.mq2macro"},
+				"4": {"name": "punctuation.separator.variable.mq2macro"},
+				"5": {
+					"patterns": [
+						{"include": "#variable"},
+						{"include": "#invalid-illegalcharacters"}
+					]
+				},
+				"6": {"name": "punctuation.separator.variable.mq2macro"}
+			}
+		},
+		"variabledelimiter": {
+			"begin": "\\s*\\${",
+			"beginCaptures": {"0": {"name": "punctuation.parenthesis.open.mq2macro"}},
+			"end": "\\s*}",
+			"endCaptures": {"0": {"name": "punctuation.parenthesis.open.mq2macro"}},
+			"patterns": [
+				{"include": "#variable"},
+				{"include": "#invalid-illegalcharacter"}	
+			]
+		},
+		"spacedelimiter": {
+			"begin": "\\s+",
+			"end": "(?<=[\\S])(?=\\s)",
+			"patterns": [
+				{"include": "#variabledelimiter"},
+				{"include": "#strings"},
+				{"include": "#constantbool"},
+				{"include": "#constantdecimal"},
+				{"include": "#substringparam"},
+				{"include": "#comment"},
+				{"include": "#invalid-illegalcharacters"}
+			]
+		},
+		"variable":
+		{
+			"patterns": [
+				{ "include": "#variable-mathcalc" },
+				{ "include": "#variable-default" }
+			]
+		},
+		"variable-default":
+		{
+			"match":"([_[:alpha:]][_[:alnum:]]*)((?<sb>\\[(?:[^\\[\\]]|\\g<sb>)*\\]))?((\\.)|(?=})|(?=$))",
+			"captures": {
+				"1": {
+					"patterns": [
+						{"include": "#toplevelobjectvariable"},
+						{
+							"match": "[_[:alpha:]][_[:alnum:]]*", 
+							"captures": {"0": {"name": "entity.name.variable.parameter.mq2macro"}}
+						},
+						{"include": "#invalid-illegalcharacters"}
+					]
+				},
+				"2": {"patterns": [{"include": "#sqbracketdelimiter"},{"include": "#invalid-illegalcharacter"}]},
+				"5": {"name": "punctuation.separator.plusminus.mq2macro"}
+			}		
+		},
+		"variable-mathcalc":
+		{
+			"match":"(?<=\\${)((Math)(\\.)(Calc))((?<sb>\\[(?:[^\\[\\]]|\\g<sb>)*\\]))?((\\.)|(?=}))",
+			"captures": {
+				"2": {"name": "variable.language.mq2macro"},
+				"3": {"name": "punctuation.separator.plusminus.mq2macro"},
+				"4": {"name": "support.function.mq2macro"},
+				"5": {"patterns": [{"include": "#sqbracketformuladelimiter"},{"include": "#invalid-illegalcharacter"}]}
+			}
+		},
+		"variableold": {
+			"match": "(?<!\\])([_[:alpha:]][_[:alnum:]]*)((\\.)|((?<sb>\\s*\\[(?:[^\\[\\]]|\\g<sb>)*\\]\\s*))(\\.)?)?(.*)",
+			"captures": {
+				"1": {
+					"patterns": [
+						{"include": "#toplevelobjectvariable"},
+						{
+							"match": "[_[:alpha:]][_[:alnum:]]*", 
+							"captures": {"0": {"name": "entity.name.variable.parameter.mq2macro"}}
+						},
+						{"include": "#invalid-illegalcharacters"}
+					]
+				},
+				"3": {"name": "punctuation.separator.variable.mq2macro"},
+				"4": {
+					"patterns": [
+						{"include": "#sqbracketdelimiter"},
+						{"include": "#invalid-illegalcharacters"}
+					]
+				},
+				"6": {"name": "punctuation.separator.variable.mq2macro"},
+				"7": {
+					"patterns": [
+						{"include": "#variable"},
+						{"include": "#invalid-illegalcharacters"}
+					]
+				}
+			}
+		},
+		"constantdecimal": {
+			"match": "(?<![[:alpha:]])(([+-])?((\\d*)(\\.)?)(\\d+))((\\()(argb|bool|body|byte|class|corpse|deity|float|heading|int|invslot|ticks|race|raidmember)(\\)))?(?![[:alpha:]])",
+			"captures": {
+				"2": {"name": "punctuation.separator.plusminus.mq2macro"},
+				"4": {"name": "constant.numeric.mq2macro"},
+				"5": {"name": "punctuation.separator.plusminus.mq2macro"},
+				"6": {"name": "constant.numeric.mq2macro"},
+				"8": {"name": "punctuation.separator.plusminus.mq2macro"},
+				"9": {"name": "support.type.immediate.mq2macro" },
+				"10": {"name": "punctuation.separator.plusminus.mq2macro"}
+			}
+		},
+		"constantbool": {
+			"match": "(?i)(?<![[:alnum:]])(true|false)(?![[:alnum:]])",
+			"captures": {
+				"1": {"name": "constant.language.truefalse.mq2macro"}
+			}
+		},
+		"searchstring": {
+			"match": "([=]?)\\b([_[:alnum:]]+)\\b",
+			"captures": {
+				"1": {"name": "punctuation.separator.equal.mq2macro"},
+				"2": {"name": "string.unquoted.mq2macro"}
+			}
+		},		
+		"substringparam": {
+			"match": "[^\\s\\$\\|\"]+",
+			"captures": { "0": {"name": "string.unquoted.mq2macro"}}
+		},
+		"operators": {
+			"match": "((\\+|-|\\\/|\\\\|\\*|%|\\^|&|\\||~|\\^\\^|<<|>>|==|!=|>|<|>=|<=|&&|\\|\\||!))",
+			"captures": { "0": {"name": "keyword.operator.mq2macro"}}
+		},
+		"echosubstring": {
+			"match": "[^\\s\\$]+",
+			"captures": { "0": {"name": "string.unquoted.mq2macro"}}
+		},
+		"subnamepartial": {
+			"match": "[^\\s\\$\\|]+",
+			"captures": { "0": {"name": "entity.name.function.mq2macro"}}
+		},
+		"quotedsearchstring": {
+			"match": "\\\"[_[:alnum:]]*\\\"",
+			"captures": {"0": {"name": "string.quoted.mq2macro"}}
+		},
+		"sqbracketdelimiterold": {
+			"match": "(?<vb>(\\[)((?:[^\\[\\]]|\\g<vb>)+)(\\]))",
+			"captures": {
+				"2": { "name": "punctuation.separator.variable.mq2macro" },
+				"3": {
+					"patterns": [
+						{"include": "#sqbracketcontents"},
+						{"include": "#invalid-illegalcharacters"}
+					]
+				},
+				"4": { "name": "punctuation.separator.variable.mq2macro" }
+			}
+		},
+		"sqbracketdelimiter": {
+			"begin": "\\s*\\[",
+			"beginCaptures": {"0": {"name": "punctuation.parenthesis.open.mq2macro"}},
+			"end": "\\s*\\]",
+			"endCaptures": {"0": {"name": "punctuation.parenthesis.open.mq2macro"}},
+			"patterns": [
+				{"include": "#sqbracketcontents"},
+				{"include": "#invalid-illegalcharacter"}	
+			]
+		},
+		"sqbracketformuladelimiter": {
+			"begin": "\\s*\\[",
+			"beginCaptures": {"0": {"name": "punctuation.parenthesis.open.mq2macro"}},
+			"end": "\\s*\\]",
+			"endCaptures": {"0": {"name": "punctuation.parenthesis.open.mq2macro"}},
+			"patterns": [
+				{"include": "#formula"},
+				{"include": "#invalid-illegalcharacter"}	
+			]
+		},
+		"ifblockdelimiter": {
+			"begin": "(?<=\\))\\s*{",
+			"beginCaptures": {"0": {"name": "punctuation.parenthesis.open.mq2macro"}},
+			"end": "^\\s*(})( else )?",
+			"endCaptures": {
+				"1": {"name": "punctuation.parenthesis.open.mq2macro"},
+				"2": {"name": "keyword.control.alert.mq2macro"}
+			},
+			"patterns": [
+				{"include": "#subbody"},
+				{"include": "#invalid-illegalcharacter"}	
+			]
+		},
+		"sqbracketcontents":
+		{
+			"match":"(?i)(((<<|>>|-))?(\\d*\\.?\\d+)|((\\!|<<|>>|-))?((?<pb>\\((?:[^\\(\\)]|\\g<pb>)+\\)))|((\\!|<<|>>|-|=))?(([ '\\.:_\\-[:alnum:]]|(?<vb>\\$\\{(?:[^\\$\\}]|\\g<vb>)+\\}))+)|(\\!)?(true|false)|(null)|(=?)([_[:alpha:]][ '\\.:_\\-[:alnum:]]*)|(=?)(\"[_[:alpha:]][ '\\.:_\\-[:alnum:]]*\"))((\\()(argb|bool|body|byte|class|corpse|deity|float|heading|int|invslot|ticks|race|raidmember)(\\)))?\\s*((,)|(?=\\]))",
+			"captures": {
+				"3": {"name": "keyword.operator.mq2macro"},
+				"4": {"patterns": [{"include": "#constantdecimal"},{"include": "#invalid-illegalcharacter"}]},
+				"6": {"name": "keyword.operator.mq2macro"},
+				"7": {"patterns": [{"include": "#formula-par"},{"include": "#invalid-illegalcharacter"}]},
+				"10": {"name": "keyword.operator.mq2macro"},
+				"11": {"patterns": 
+					[{"include": "#variabledelimiter"},
+					{"include": "#strings"},
+					{"include": "#substringparam"},
+					{"include": "#invalid-illegalcharacter"}
+					]},
+				"14": {"name": "keyword.operator.mq2macro"},
+				"15": {"patterns": [{"include": "#constantbool"},{"include": "#invalid-illegalcharacter"}]},
+				"16": {"name": "constant.language.truefalse.mq2macro"},
+				"17": {"name": "keyword.operator.mq2macro"},
+				"18": {"name": "string.unquoted.mq2macro"},
+				"19": {"name": "keyword.operator.mq2macro"},
+				"20": {"name": "string.quoted.mq2macro"},
+				"22": {"name": "punctuation.separator.plusminus.mq2macro"},
+				"23": {"name": "support.type.immediate.mq2macro" },
+				"24": {"name": "punctuation.separator.plusminus.mq2macro"},
+				"26": {"name": "keyword.operator.mq2macro"}
+			}
+		},
+		"punctuation-comma": {
+			"name": "punctuation.separator.comma.mq2macro",
+			"match": ","
+		}
+	},
+	"scopeName": "source.mq2macro"
+}
