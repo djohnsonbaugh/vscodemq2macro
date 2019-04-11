@@ -181,6 +181,7 @@
 			"patterns": [
 				{ "include": "#gotolabel"},
 				{ "include": "#mq2slashcommand-ifblock"},
+				{ "include": "#mq2slashcommand-elseif" },
 				{ "include": "#mq2slashcommand-forblock"},
 				{ "include": "#mq2slashcommand" },
 				{ "include": "#variabledelimiter"},
@@ -223,6 +224,7 @@
 				{ "include": "#mq2slashcommand-doevents" },
 				{ "include": "#mq2slashcommand-echo" },
 				{ "include": "#mq2slashcommand-if" },
+				{ "include": "#mq2slashcommand-ini" },
 				{ "include": "#mq2slashcommand-goto" },
 				{ "include": "#mq2slashcommand-return" },
 				{ "include": "#mq2slashcommand-singles" },
@@ -425,12 +427,12 @@
 			}
 		},
 		"mq2slashcommand-call": {
-			"match": "\\b((?i)call)\\b([^\\n\\r]*)",
+			"match": "(?i)\\b(call)\\b([^\\n\\r]*)",
 			"captures": {
 				"1": { "name": "keyword.control.alert.mq2macro" },
 				"2": { "patterns": [
 						{
-							"begin": "(?<=\\/call)\\s+(?i)(Event_)?",
+							"begin": "(?i)(?<=\\/call)\\s+(?i)(Event_)?",
 							"beginCaptures": { 
 								"1": {"name": "keyword.other.mq2macro"}
 							},
@@ -475,13 +477,46 @@
 				}
 			}
 		},
+		"mq2slashcommand-ini": {
+			"match": "(?i)\\b(ini)\\s+(\")([^\"\\n\\r]+)(\")\\s+(\")([^\"\\n\\r]+)(\")\\s+(\")([^\"\\n\\r]+)(\")\\s+(\")([^\"\\n\\r]+)(\")\\s*([^\\|\\n\\r]*)",
+			"captures": {
+				"1": { "name": "keyword.control.alert.mq2macro" },
+				"2": { "name": "punctuation.separator.fowardslash.mq2macro"},
+				"3": {"patterns": [{"include": "#inidata"},{"include": "#invalid-illegalcharacter"}]},
+				"4": { "name": "punctuation.separator.fowardslash.mq2macro"},
+				"5": { "name": "punctuation.separator.fowardslash.mq2macro"},
+				"6": {"patterns": [{"include": "#inidata"},{"include": "#invalid-illegalcharacter"}]},
+				"7": { "name": "punctuation.separator.fowardslash.mq2macro"},
+				"8": { "name": "punctuation.separator.fowardslash.mq2macro"},
+				"9": {"patterns": [{"include": "#inidata"},{"include": "#invalid-illegalcharacter"}]},
+				"10": { "name": "punctuation.separator.fowardslash.mq2macro"},
+				"11": { "name": "punctuation.separator.fowardslash.mq2macro"},
+				"12": {"patterns": [{"include": "#inidata"},{"include": "#invalid-illegalcharacter"}]},
+				"13": { "name": "punctuation.separator.fowardslash.mq2macro"},
+				"14": { "patterns": [
+						{"include": "#comment"},
+						{"include": "#invalid-illegalcharacters"}	
+					]
+				}
+			}
+		},
+		"inidata": {
+			"begin": "(?<=\")",
+			"end": "(?=\")",
+			"patterns": [
+				{"include": "#variabledelimiter"},
+				{"include": "#strings"},
+				{"include": "#substringparam"},
+				{"include": "#invalid-illegalcharacters"}
+			]
+		},
 		"mq2slashcommand-varset": {
 			"match": "\\b((?i)varset)\\b([^\\n\\r\\|]*)",
 			"captures": {
 				"1": { "name": "keyword.control.alert.mq2macro" },
 				"2": { "patterns": [
 						{
-							"match": "(?i)(?<=\\\/varset)\\s+([^\\s\\n\\r\\[\\|\\]]+)((?<vb>\\[(?:[^\\[\\]]|\\g<vb>)+\\])?)?(\\s+(((<<|>>|-))?(\\d*\\.?\\d+)|((\\!|<<|>>|-))?((?<pb>\\((?:[^\\(\\)]|\\g<pb>)+\\)))|((\\!|<<|>>|-|=))?(((?<bb>\\$\\{(?:[^\\$\\}]|\\g<bb>)+\\})|[ '\\.:_\\-[:alnum:]])+)|(\\!)?(true|false)|(null)|(=?)([_[:alpha:]][ '\\.:_\\-[:alnum:]]*)|(=?)(\"[_[:alpha:]][ '\\.:_\\-[:alnum:]]*\"))((\\()(argb|bool|body|byte|class|corpse|deity|float|heading|int|invslot|ticks|race|raidmember)(\\)))?)",
+							"match": "(?i)(?<=\\\/varset)\\s+([^\\s\\n\\r\\[\\|\\]]+)((?<vb>\\[(?:[^\\[\\]]|\\g<vb>)+\\])?)?(\\s+(((<<|>>|-))?(\\d*\\.?\\d+)|((\\!|<<|>>|-))?((?<pb>\\((?:[^\\(\\)]|\\g<pb>)+\\)))|((\\!|<<|>>|-|=))?(((?<bb>\\$\\{(?:[^\\$\\}]|\\g<bb>)+\\})|[ \\S])+)|(\\!)?(true|false)|(null)|(=?)([_[:alpha:]][ '\\.:_\\-[:alnum:]]*)|(=?)(\"[_[:alpha:]][ '\\.:_\\-[:alnum:]]*\"))((\\()(argb|bool|body|byte|class|corpse|deity|float|heading|int|invslot|ticks|race|raidmember)(\\)))?)",
 							"captures": { 
 								"1": {"name": "entity.name.variable.parameter.mq2macro"},
 								"2": {"patterns": [{"include": "#sqbracketdelimiter"},{"include": "#invalid-illegalcharacter"}]},
@@ -588,6 +623,12 @@
 					}
 				}	
 			]
+		},
+		"mq2slashcommand-elseif": {
+			"match": "(?i)(?<=})\\s+(else)(?=\\s+\\/if\\s+\\()",
+			"captures": {
+				"1": { "name": "keyword.control.alert.mq2macro" }
+			}
 		},
 		"mq2slashcommand-ifblock": {
 			"begin": "(?i)\\s*(((?<=}) (else) )|((?<=}) (else) )?((\\\/)(if)\\s+((?<vb>\\((?:[^\\(\\)]|\\g<vb>)+\\))) ))({)",
