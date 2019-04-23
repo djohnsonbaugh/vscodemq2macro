@@ -14,7 +14,9 @@ To install, simply navigate to ~/.vscode/extensions (or in Windows, %USERPROFILE
 
 ## Known Issues
 EQ Client Commands - This does not validate EQ commands at all. It identifies various EQ commands but then allows pretty much any sort of space delimited input without trying to identify errors.
+
 MQ2 Commands - A subset of commands are supported, if I missed a key command you actually use, submit a request on issues 
+
 Define - If you do a #define statement, it will probalby look like an error. (havent decided how to deal with this yet)
 
 ## Release Notes
