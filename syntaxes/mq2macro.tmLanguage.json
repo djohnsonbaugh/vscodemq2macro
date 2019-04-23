@@ -209,7 +209,7 @@
 					"name": "punctuation.separator.fowardslash.mq2macro"
 				}
 			},
-			"end": "(?<=$)",
+			"end": "((?=\\/)|(?<=$))",
 			"patterns": [
 				{ "include": "#comment" },
 				{ "include": "#mq2slashcommand-aa"},
@@ -222,6 +222,7 @@
 				{ "include": "#mq2slashcommand-declare"},
 				{ "include": "#mq2slashcommand-delay"},
 				{ "include": "#mq2slashcommand-doevents" },
+				{ "include": "#mq2slashcommand-mqlogclear"},
 				{ "include": "#mq2slashcommand-echo" },
 				{ "include": "#mq2slashcommand-if" },
 				{ "include": "#mq2slashcommand-ini" },
@@ -233,6 +234,9 @@
 				{ "include": "#mq2slashcommand-varset" },
 				{ "include": "#mq2slashcommand-unsupported"},
 				{ "include": "#eqslashcommand-unsupported"},
+				{ "include": "#mq2slashcommand-ifblock"},
+				{ "include": "#mq2slashcommand-elseif" },
+				{ "include": "#mq2slashcommand-forblock"},
 				{ "include": "#invalid-illegalcharacters" }
 			]
 		},
@@ -370,10 +374,9 @@
 			}
 		},
 		"mq2slashcommand-altctrshiftsquelch": {
-			"match": "(?i)\\b(squelch|ctrlkey|altkey|shiftkey|nomodkey|noparse)\\b\\s+(\\/[^|]*)",
+			"match": "(?i)\\b(squelch|ctrlkey|altkey|shiftkey|nomodkey|noparse)\\b\\s*",
 			"captures": {
-				"1": { "name": "keyword.control.squelch.mq2macro" },
-				"2": {"patterns": [{"include": "#mq2slashcommand"}]}
+				"1": { "name": "keyword.control.squelch.mq2macro" }
 			}
 		},
 		"mq2slashcommand-bind": {
@@ -457,18 +460,18 @@
 				"1": { "name": "keyword.control.alert.mq2macro" },
 				"2": { "patterns": [
 						{
-							"match": "(?i)(?<=\\\/declare)\\s+([^\\s\\n\\r\\[\\|\\]]+)((?<vb>\\[(?:[^\\[\\]]|\\g<vb>)+\\])?)?(\\s+(?!(local|global|outer))([[:alpha:]]+))?(\\s+(local|global|outer))?(\\s+([^\\\"\\s\\n\\r\\|]+|\"[^\\n\\r\\|]*\"))?",
+							"match": "(?i)(?<=\\\/declare)\\s+(([^\\s\\n\\r\\[\\|\\]]|(?<ib>\\$\\{(?:[^\\$\\}]|\\g<ib>)+\\}))+)((?<vb>\\[(?:[^\\[\\]]|\\g<vb>)+\\])?)?(\\s+(?!(local|global|outer))([[:alpha:]]+))?(\\s+(local|global|outer))?(\\s+([^\\\"\\s\\n\\r\\|]+|\"[^\\n\\r\\|]*\"))?",
 							"captures": { 
-								"1": {"name": "entity.name.variable.parameter.mq2macro"},
-								"2": {"patterns": [{"include": "#sqbracketdelimiter"}]},
-								"6": {"patterns": [
+								"1": {"patterns": [{"include": "#variablelabel"},{"include": "#invalid-illegalcharacter"}]},
+								"4": {"patterns": [{"include": "#sqbracketdelimiter"}]},
+								"8": {"patterns": [
 										{"include": "#type-reference"},
 										{"include": "#type-immediate"},
 										{"include": "#spacedelimiter"}
 									]
 								},
-								"8": {"name": "keyword.control.alert.mq2macro" },
-								"9": {"patterns": [{"include": "#spacedelimiter"}]}
+								"10": {"name": "keyword.control.alert.mq2macro" },
+								"11": {"patterns": [{"include": "#spacedelimiter"}]}
 							}
 						},
 						{"include": "#comment"},
@@ -516,11 +519,11 @@
 				"1": { "name": "keyword.control.alert.mq2macro" },
 				"2": { "patterns": [
 						{
-							"match": "(?i)(?<=\\\/varset)\\s+([^\\s\\n\\r\\[\\|\\]]+)((?<vb>\\[(?:[^\\[\\]]|\\g<vb>)+\\])?)?(\\s+(((<<|>>|-))?(\\d*\\.?\\d+)|((\\!|<<|>>|-))?((?<pb>\\((?:[^\\(\\)]|\\g<pb>)+\\)))|((\\!|<<|>>|-|=))?(((?<bb>\\$\\{(?:[^\\$\\}]|\\g<bb>)+\\})|[ \\S])+)|(\\!)?(true|false)|(null)|(=?)([_[:alpha:]][ '\\.:_\\-[:alnum:]]*)|(=?)(\"[_[:alpha:]][ '\\.:_\\-[:alnum:]]*\"))((\\()(argb|bool|body|byte|class|corpse|deity|float|heading|int|invslot|ticks|race|raidmember)(\\)))?)",
+							"match": "(?i)(?<=\\\/varset)\\s+(([^\\s\\n\\r\\[\\|\\]]|(?<ib>\\$\\{(?:[^\\$\\}]|\\g<ib>)+\\}))+)((?<vb>\\[(?:[^\\[\\]]|\\g<vb>)+\\])?)?(\\s+(((<<|>>|-))?(\\d*\\.?\\d+)(s|m)?|((\\!|<<|>>|-))?((?<pb>\\((?:[^\\(\\)]|\\g<pb>)+\\)))|((\\!|<<|>>|-|=))?(((?<bb>\\$\\{(?:[^\\$\\}]|\\g<bb>)+\\})|[ \\S])+)|(\\!)?(true|false)|(null)|(=?)([_[:alpha:]][ '\\.:_\\-[:alnum:]]*)|(=?)(\"[_[:alpha:]][ '\\.:_\\-[:alnum:]]*\"))((\\()(argb|bool|body|byte|class|corpse|deity|float|heading|int|invslot|ticks|race|raidmember)(\\)))?)",
 							"captures": { 
-								"1": {"name": "entity.name.variable.parameter.mq2macro"},
-								"2": {"patterns": [{"include": "#sqbracketdelimiter"},{"include": "#invalid-illegalcharacter"}]},
-								"4": {"patterns": [{"include": "#spacedelimiter"},{"include": "#invalid-illegalcharacter"}]}
+								"1": {"patterns": [{"include": "#variablelabel"},{"include": "#invalid-illegalcharacter"}]},
+								"4": {"patterns": [{"include": "#sqbracketdelimiter"},{"include": "#invalid-illegalcharacter"}]},
+								"6": {"patterns": [{"include": "#spacedelimiter"},{"include": "#invalid-illegalcharacter"}]}
 							}
 						},
 						{"include": "#comment"},
@@ -535,11 +538,11 @@
 				"1": { "name": "keyword.control.alert.mq2macro" },
 				"2": { "patterns": [
 						{
-							"match": "(?i)(?<=\\\/vardata)\\s+([^\\s\\n\\r\\[\\|\\]]+)((?<vb>\\[(?:[^\\[\\]]|\\g<vb>)+\\])?)?\\s+([^|]*)",
+							"match": "(?i)(?<=\\\/vardata)\\s+((?:[^\\s\\n\\r\\[\\|\\]]|(?<ib>\\$\\{(?:[^\\$\\}]|\\g<ib>)+\\}))+)((?<vb>\\[(?:[^\\[\\]]|\\g<vb>)+\\])?)?\\s+((?:(?<eib>\\$\\{(?:[^\\$\\}]|\\g<eib>)+\\})|(?<evb>\\[(?:[^\\[\\]]|\\g<evb>)+\\])|[^\\s|])+)",
 							"captures": { 
-								"1": {"name": "entity.name.variable.parameter.mq2macro"},
-								"2": {"patterns": [{"include": "#sqbracketdelimiter"},{"include": "#invalid-illegalcharacter"}]},
-								"4": {"patterns": [{"include": "#variable"},{"include": "#invalid-illegalcharacter"}]}
+								"1": {"patterns": [{"include": "#variablelabel"},{"include": "#invalid-illegalcharacter"}]},
+								"3": {"patterns": [{"include": "#sqbracketdelimiter"},{"include": "#invalid-illegalcharacter"}]},
+								"5": {"patterns": [{"include": "#variable"},{"include": "#invalid-illegalcharacter"}]}
 							}
 						},
 						{"include": "#comment"},
@@ -554,11 +557,11 @@
 				"1": { "name": "keyword.control.alert.mq2macro" },
 				"2": { "patterns": [
 						{
-							"match": "(?i)(?<=\\\/varcalc)\\s+([^\\s\\n\\r\\[\\|\\]]+)((?<vb>\\[(?:[^\\[\\]]|\\g<vb>)+\\])?)?\\s+([^|]*)",
+							"match": "(?i)(?<=\\\/varcalc)\\s+(([^\\s\\n\\r\\[\\|\\]]|(?<ib>\\$\\{(?:[^\\$\\}]|\\g<ib>)+\\}))+)((?<vb>\\[(?:[^\\[\\]]|\\g<vb>)+\\])?)?\\s+([^|]*)",
 							"captures": { 
-								"1": {"name": "entity.name.variable.parameter.mq2macro"},
-								"2": {"patterns": [{"include": "#sqbracketdelimiter"},{"include": "#invalid-illegalcharacter"}]},
-								"4": {"patterns": [{"include": "#formula"},{"include": "#invalid-illegalcharacter"}]}
+								"1": {"patterns": [{"include": "#variablelabel"},{"include": "#invalid-illegalcharacter"}]},
+								"4": {"patterns": [{"include": "#sqbracketdelimiter"},{"include": "#invalid-illegalcharacter"}]},
+								"6": {"patterns": [{"include": "#formula"},{"include": "#invalid-illegalcharacter"}]}
 							}
 						},
 						{"include": "#comment"},
@@ -604,7 +607,7 @@
 			}
 		},
 		"mq2slashcommand-echo": {
-			"begin": "(?i)(echo)\\b",
+			"begin": "(?i)(echo|mqlog|popup)\\b",
 			"beginCaptures": {"1": { "name": "keyword.control.alert.mq2macro" }},
 			"end": "(?<=$)",
 			"patterns": [
@@ -612,14 +615,17 @@
 				{ "include": "#echosubstring"}
 			]
 		},
+		"mq2slashcommand-mqlogclear": {
+			"match": "(?i)(mqlog\\s+clear)\\b",
+			"captures": {"1": { "name": "keyword.control.alert.mq2macro" }}
+		},
 		"mq2slashcommand-if": {
 			"patterns": [
 				{
-					"match": "(?i)(if)\\s+((?<vb>\\((?:[^\\(\\)]|\\g<vb>)+\\)))\\s+(\\/[^\\n\\r]+)(?=$)",
+					"match": "(?i)(if)\\s+((?<vb>\\((?:[^\\(\\)]|\\g<vb>)+\\)))\\s*",
 					"captures": {
 						"1": { "name": "keyword.control.alert.mq2macro" },
-						"2": {"patterns": [{"include": "#formula-par"},{"include": "#invalid-illegalcharacter"}]},
-						"4": {"patterns": [{"include": "#mq2slashcommand"},{"include": "#invalid-illegalcharacter"}]}
+						"2": {"patterns": [{"include": "#formula-par"},{"include": "#invalid-illegalcharacter"}]}
 					}
 				}	
 			]
@@ -700,11 +706,11 @@
 		},
 		"formula": {
 			"patterns": [
+				{"include": "#formula-compare"},
 				{"include": "#formula-end"},
 				{"include": "#formula-join"},
 				{"include": "#formula-operand"},
 				{"include": "#formula-par"},
-				{"include": "#formula-compare"},
 				{"include": "#invalid-illegalcharacter"}	
 			]
 		},
@@ -958,7 +964,7 @@
 			}
 		},
 		"toplevelobjectvariable": {
-			"match": "(?<=\\{)\\s*\\b(AltAbility|Bool|Me|Corpse|Cursor|Defined|Ground|FindItem|FindItemBank|FindItemBankCount|FindItemCount|Float|GameTime|Group|GroupLeader|GroupLeaderName|Heading|If|Ini|Int|InvSlot|LastSpawn|LineOfSight|Macro|MacroQuest|Math|Merchant|NamingSpawn|NearestSpawn|Plugin|Raid|SelectedItem|Skill|Spawn|SpawnCount|Spell|String|Switch|Target|Time|Type|Window|Zone)\\b",
+			"match": "(?<=[\\{ ])\\s*\\b(AltAbility|Bool|Me|Corpse|Cursor|Defined|Ground|FindItem|FindItemBank|FindItemBankCount|FindItemCount|Float|GameTime|Group|GroupLeader|GroupLeaderName|Heading|If|Ini|Int|InvSlot|LastSpawn|LineOfSight|Macro|MacroQuest|Math|Merchant|NamingSpawn|NearestSpawn|Plugin|Raid|SelectedItem|Skill|Spawn|SpawnCount|Spell|String|Switch|Target|Time|Type|Window|Zone)\\b(?!\\$)",
 			"captures": {
 				"1": { "name": "variable.language.mq2macro" }
 			}
@@ -1021,22 +1027,25 @@
 				{ "include": "#variable-default" }
 			]
 		},
+		"variablelabel":
+		{
+			"patterns": [
+				{ "include": "#variabledelimiter"},
+				{"include": "#toplevelobjectvariable"},
+				{
+					"match": "[_[:alpha:]][_[:alnum:]]*", 
+					"captures": {"0": {"name": "entity.name.variable.parameter.mq2macro"}}
+				},
+				{"include": "#invalid-illegalcharacters"}
+			]
+		},
 		"variable-default":
 		{
-			"match":"([_[:alpha:]][_[:alnum:]]*)((?<sb>\\[(?:[^\\[\\]]|\\g<sb>)*\\]))?((\\.)|(?=})|(?=$))",
+			"match":"((((?<db>\\$\\{(?:[^\\$\\}]|\\g<db>)*\\}))|([_[:alpha:]][_[:alnum:]]*))+)((?<sb>\\[(?:[^\\[\\]]|\\g<sb>)*\\]))?((\\.)|(?=})|(?=$))",
 			"captures": {
-				"1": {
-					"patterns": [
-						{"include": "#toplevelobjectvariable"},
-						{
-							"match": "[_[:alpha:]][_[:alnum:]]*", 
-							"captures": {"0": {"name": "entity.name.variable.parameter.mq2macro"}}
-						},
-						{"include": "#invalid-illegalcharacters"}
-					]
-				},
-				"2": {"patterns": [{"include": "#sqbracketdelimiter"},{"include": "#invalid-illegalcharacter"}]},
-				"5": {"name": "punctuation.separator.plusminus.mq2macro"}
+				"1": {"patterns": [{ "include": "#variablelabel"}] },
+				"6": {"patterns": [{"include": "#sqbracketdelimiter"},{"include": "#invalid-illegalcharacter"}]},
+				"9": {"name": "punctuation.separator.plusminus.mq2macro"}
 			}		
 		},
 		"variable-mathcalc":
@@ -1079,15 +1088,16 @@
 			}
 		},
 		"constantdecimal": {
-			"match": "(?<![[:alpha:]])(([+-])?((\\d*)(\\.)?)(\\d+))((\\()(argb|bool|body|byte|class|corpse|deity|float|heading|int|invslot|ticks|race|raidmember)(\\)))?(?![[:alpha:]])",
+			"match": "(?<![[:alpha:]])(([+-])?((\\d*)(\\.)?)(\\d+))(s|m)?((\\()(argb|bool|body|byte|class|corpse|deity|float|heading|int|invslot|ticks|race|raidmember)(\\)))?(?![[:alpha:]])",
 			"captures": {
 				"2": {"name": "punctuation.separator.plusminus.mq2macro"},
 				"4": {"name": "constant.numeric.mq2macro"},
 				"5": {"name": "punctuation.separator.plusminus.mq2macro"},
 				"6": {"name": "constant.numeric.mq2macro"},
-				"8": {"name": "punctuation.separator.plusminus.mq2macro"},
-				"9": {"name": "support.type.immediate.mq2macro" },
-				"10": {"name": "punctuation.separator.plusminus.mq2macro"}
+				"7": {"name": "keyword.control.next.mq2macro"},
+				"9": {"name": "punctuation.separator.plusminus.mq2macro"},
+				"10": {"name": "support.type.immediate.mq2macro" },
+				"11": {"name": "punctuation.separator.plusminus.mq2macro"}
 			}
 		},
 		"constantbool": {
