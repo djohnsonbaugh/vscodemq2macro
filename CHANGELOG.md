@@ -4,6 +4,12 @@ All notable changes to the "vscodemq2" extension will be documented in this file
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## [Unreleased]
+## [0.0.2]
+
+- Added support for Variable labels having embedded variables - i.e. ${Junk${name}} - impacted /declare /varset/vardata/varcalc and variable references in general
+- Fixed issue where commands that do some sort of modification /squelch would fail if preceeding a command that was a block like  /if () { } 
+- Fixed issue in Formulas where (10*(1+3) > 1) would fail
+
+## [0.0.1]
 
 - Initial release
