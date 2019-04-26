@@ -1,7 +1,7 @@
 {
     "name": "vscodemq2",
     "publisher": "DeWayneJohnsonbaugh",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "displayName": "vscodemq2",
     "description": "Macroquest2 Macro Language VSCode Extension",
     "engines": {
@@ -42,5 +42,5 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/djohnsonbaugh/vscodemq2macro.git"
-      }
+    }
 }
