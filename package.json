@@ -1,5 +1,7 @@
 {
     "name": "vscodemq2",
+    "publisher": "DeWayneJohnsonbaugh",
+    "version": "0.0.3",
     "displayName": "vscodemq2",
     "description": "Macroquest2 Macro Language VSCode Extension",
     "version": "0.0.3",
