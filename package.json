@@ -20,6 +20,10 @@
             "language": "mq2macro",
             "scopeName": "source.mq2macro",
             "path": "./syntaxes/mq2macro.tmLanguage.json"
-        }]
+        }],
+        "snippets": [{
+			"language": "mq2macro",
+			"path": "./snippets/mq2macro.json"
+		}]
     }
 }
