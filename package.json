@@ -2,7 +2,7 @@
     "name": "vscodemq2",
     "displayName": "vscodemq2",
     "description": "Macroquest2 Macro Language VSCode Extension",
-    "version": "0.0.1",
+    "version": "0.0.3",
     "engines": {
         "vscode": "^1.32.0"
     },
@@ -10,20 +10,32 @@
         "Programming Languages"
     ],
     "contributes": {
-        "languages": [{
-            "id": "mq2macro",
-            "aliases": ["mq2macro", "mq2macro"],
-            "extensions": [".mac",".inc"],
-            "configuration": "./language-configuration.json"
-        }],
-        "grammars": [{
-            "language": "mq2macro",
-            "scopeName": "source.mq2macro",
-            "path": "./syntaxes/mq2macro.tmLanguage.json"
-        }],
-        "snippets": [{
-			"language": "mq2macro",
-			"path": "./snippets/mq2macro.json"
-		}]
+        "languages": [
+            {
+                "id": "mq2macro",
+                "aliases": [
+                    "mq2macro",
+                    "mq2macro"
+                ],
+                "extensions": [
+                    ".mac",
+                    ".inc"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "mq2macro",
+                "scopeName": "source.mq2macro",
+                "path": "./syntaxes/mq2macro.tmLanguage.json"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "mq2macro",
+                "path": "./snippets/mq2macro.json"
+            }
+        ]
     }
 }
