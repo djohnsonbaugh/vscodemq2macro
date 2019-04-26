@@ -4,6 +4,11 @@ All notable changes to the "vscodemq2" extension will be documented in this file
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.0.3]
+- Fixed Block Comments Bug - it was not working inside Subroutines
+- Added /deletevar
+- Fixed issue with /declare where default value was a variable reference
+
 ## [0.0.2]
 
 - Added support for Variable labels having embedded variables - i.e. ${Junk${name}} - impacted /declare /varset/vardata/varcalc and variable references in general

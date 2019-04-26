@@ -21,14 +21,21 @@
 		"comment": {
 			"patterns": [{
 				"name": "comment.block.cs",
-				"begin": "\\|\\*{2}",
+				"begin": "\\s*\\|\\*{2}",
 				"beginCaptures": {
 					"0": { "name": "punctuation.definition.comment.mq2macro" }
 				},
 				"end": "\\*{2}\\|",
 				"endCaptures": {
 					"0": { "name": "punctuation.definition.comment.mq2macro" }
-				}
+				},
+				"patterns": 
+				[
+					{
+						"match": ".",
+						"captures": {"0": {"name": "comment.block.documentation" } }
+					}
+				]
 			},
 			{
 				"name": "comment.line.pipe.mq2macro",
@@ -179,13 +186,13 @@
 		},
 		"subbody": {
 			"patterns": [
+				{ "include": "#comment" },
 				{ "include": "#gotolabel"},
 				{ "include": "#mq2slashcommand-ifblock"},
 				{ "include": "#mq2slashcommand-elseif" },
 				{ "include": "#mq2slashcommand-forblock"},
 				{ "include": "#mq2slashcommand" },
 				{ "include": "#variabledelimiter"},
-				{ "include": "#comment" },
 				{ "include": "#invalid-illegalcharacters" }
 			]
 		},
@@ -220,6 +227,7 @@
 				{ "include": "#mq2slashcommand-buyitem"},
 				{ "include": "#mq2slashcommand-call"},
 				{ "include": "#mq2slashcommand-declare"},
+				{ "include": "#mq2slashcommand-deletevar"},
 				{ "include": "#mq2slashcommand-delay"},
 				{ "include": "#mq2slashcommand-doevents" },
 				{ "include": "#mq2slashcommand-mqlogclear"},
@@ -460,7 +468,7 @@
 				"1": { "name": "keyword.control.alert.mq2macro" },
 				"2": { "patterns": [
 						{
-							"match": "(?i)(?<=\\\/declare)\\s+(([^\\s\\n\\r\\[\\|\\]]|(?<ib>\\$\\{(?:[^\\$\\}]|\\g<ib>)+\\}))+)((?<vb>\\[(?:[^\\[\\]]|\\g<vb>)+\\])?)?(\\s+(?!(local|global|outer))([[:alpha:]]+))?(\\s+(local|global|outer))?(\\s+([^\\\"\\s\\n\\r\\|]+|\"[^\\n\\r\\|]*\"))?",
+							"match": "(?i)(?<=\\\/declare)\\s+(([^\\s\\n\\r\\[\\|\\]]|(?<ib>\\$\\{(?:[^\\$\\}]|\\g<ib>)+\\}))+)((?<vb>\\[(?:[^\\[\\]]|\\g<vb>)+\\])?)?(\\s+(?!(local|global|outer))([[:alpha:]]+))?(\\s+(local|global|outer))?(\\s+(((<<|>>|-))?(\\d*\\.?\\d+)|((\\!|<<|>>|-))?((?<pb>\\((?:[^\\(\\)]|\\g<pb>)+\\)))|((\\!|<<|>>|-|=))?(((?<bb>\\$\\{(?:[^\\$\\}]|\\g<bb>)+\\})|[ \\S])+)|(\\!)?(true|false)|(null)|(=?)([_[:alpha:]][ '\\.:_\\-[:alnum:]]*)|(=?)(\"[_[:alpha:]][ '\\.:_\\-[:alnum:]]*\"))((\\()(argb|bool|body|byte|class|corpse|deity|float|heading|int|invslot|ticks|race|raidmember)(\\)))?)?",
 							"captures": { 
 								"1": {"patterns": [{"include": "#variablelabel"},{"include": "#invalid-illegalcharacter"}]},
 								"4": {"patterns": [{"include": "#sqbracketdelimiter"}]},
@@ -472,6 +480,24 @@
 								},
 								"10": {"name": "keyword.control.alert.mq2macro" },
 								"11": {"patterns": [{"include": "#spacedelimiter"}]}
+							}
+						},
+						{"include": "#comment"},
+						{"include": "#invalid-illegalcharacters"}	
+					]
+				}
+			}
+		},
+		"mq2slashcommand-deletevar": {
+			"match": "\\b((?i)deletevar)\\b([^\\n\\r\\|]*)",
+			"captures": {
+				"1": { "name": "keyword.control.alert.mq2macro" },
+				"2": { "patterns": [
+						{
+							"match": "(?i)(?<=\\\/deletevar)\\s+((\\*\\s+global)|(([^\\s\\n\\r\\[\\|\\]]|(?<ib>\\$\\{(?:[^\\$\\}]|\\g<ib>)+\\}))+))",
+							"captures": { 
+								"2": { "name": "keyword.control.alert.mq2macro" },
+								"3": {"patterns": [{"include": "#variablelabel"},{"include": "#invalid-illegalcharacter"}]}
 							}
 						},
 						{"include": "#comment"},
