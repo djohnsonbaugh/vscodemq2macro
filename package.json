@@ -42,5 +42,6 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/djohnsonbaugh/vscodemq2macro.git"
-    }
+    },
+    "keywords": ["everquest", "EQ", "Macroquest", "Macro", "MQ2", ".mac", "Macroquest2"]
 }
