@@ -17,6 +17,8 @@ EQ Client Commands - This does not validate EQ commands at all. It identifies va
 
 MQ2 Commands - A subset of commands are supported, if I missed a key command you actually use, submit a request on issues 
 
+MQ2 Plugin Commands - not validated currently, but some are recognized. Add issue if you feel explicit support is warranted.
+
 Define - If you do a #define statement, it will probalby look like an error. (havent decided how to deal with this yet)
 
 ## Release Notes

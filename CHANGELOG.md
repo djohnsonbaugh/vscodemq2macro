@@ -4,6 +4,11 @@ All notable changes to the "vscodemq2" extension will be documented in this file
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.3.0]
+- Added /while
+- Added recognition of unsupported commands from optional plugins
+- Added various shortened versions of commands
+
 ## [0.0.3]
 - Fixed Block Comments Bug - it was not working inside Subroutines
 - Added /deletevar

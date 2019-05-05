@@ -230,6 +230,8 @@
 				{ "include": "#mq2slashcommand-deletevar"},
 				{ "include": "#mq2slashcommand-delay"},
 				{ "include": "#mq2slashcommand-doevents" },
+				{ "include": "#mq2slashcommand-mac"},
+				{ "include": "#mq2slashcommand-macro"},
 				{ "include": "#mq2slashcommand-mqlogclear"},
 				{ "include": "#mq2slashcommand-echo" },
 				{ "include": "#mq2slashcommand-if" },
@@ -242,6 +244,8 @@
 				{ "include": "#mq2slashcommand-varset" },
 				{ "include": "#mq2slashcommand-unsupported"},
 				{ "include": "#eqslashcommand-unsupported"},
+				{ "include": "#mq2eqbc-slashcommand-unsupported"},
+				{ "include": "#mq2cast-slashcommand-unsupported"},
 				{ "include": "#mq2slashcommand-ifblock"},
 				{ "include": "#mq2slashcommand-elseif" },
 				{ "include": "#mq2slashcommand-forblock"},
@@ -382,7 +386,7 @@
 			}
 		},
 		"mq2slashcommand-altctrshiftsquelch": {
-			"match": "(?i)\\b(squelch|ctrlkey|altkey|shiftkey|nomodkey|noparse)\\b\\s*",
+			"match": "(?i)\\b(squelch|ctrlkey|altkey|shiftkey|nomodkey|noparse|ctrl|alt|shift|nomod)\\b\\s*",
 			"captures": {
 				"1": { "name": "keyword.control.squelch.mq2macro" }
 			}
@@ -447,6 +451,50 @@
 							"beginCaptures": { 
 								"1": {"name": "keyword.other.mq2macro"}
 							},
+							"end": "(?<=[\\S])(?=\\s)",
+							"patterns": [
+								{"include": "#constantdecimal"},
+								{"include": "#constantbool"},
+								{"include": "#variabledelimiter"},
+								{"include": "#subnamepartial"},
+								{"include": "#comment"},
+								{"include": "#invalid-illegalcharacters"}	
+							]
+						},
+						{"include": "#spacedelimiter"}
+					]
+				}
+			}
+		},
+		"mq2slashcommand-macro": {
+			"match": "(?i)\\b(macro)\\b([^\\n\\r]*)",
+			"captures": {
+				"1": { "name": "keyword.control.alert.mq2macro" },
+				"2": { "patterns": [
+						{
+							"begin": "(?i)(?<=\\/macro)\\s+",
+							"end": "(?<=[\\S])(?=\\s)",
+							"patterns": [
+								{"include": "#constantdecimal"},
+								{"include": "#constantbool"},
+								{"include": "#variabledelimiter"},
+								{"include": "#subnamepartial"},
+								{"include": "#comment"},
+								{"include": "#invalid-illegalcharacters"}	
+							]
+						},
+						{"include": "#spacedelimiter"}
+					]
+				}
+			}
+		},
+		"mq2slashcommand-mac": {
+			"match": "(?i)\\b(mac)\\b([^\\n\\r]*)",
+			"captures": {
+				"1": { "name": "keyword.control.alert.mq2macro" },
+				"2": { "patterns": [
+						{
+							"begin": "(?i)(?<=\\/mac)\\s+",
 							"end": "(?<=[\\S])(?=\\s)",
 							"patterns": [
 								{"include": "#constantdecimal"},
@@ -707,8 +755,7 @@
 				{"include": "#invalid-illegalcharacter"}	
 			]
 		},
-		"mq2slashcommand-goto":
-		{
+		"mq2slashcommand-goto": {
 			"match": "(?i)(goto)\\s+(:)([^\\s\\n\\r\\[\\|\\]]+)\\s*([^\\n\\r]*)\\s*(?=$)",
 			"captures": {
 				"1": { "name": "keyword.control.next.mq2macro" },
@@ -932,15 +979,29 @@
 				"2": {"patterns": [{"include": "#spacedelimiter"},{"include": "#invalid-illegalcharacter"}]}
 			}
 		},
+		"mq2eqbc-slashcommand-unsupported": {
+			"match": "(?i)\\b(bc|bct|bca|bcaa)\\b([^\\n\\r\\|]*)",
+			"captures": {
+				"1": { "name": "support.function.alert.mq2macro" },
+				"2": {"patterns": [{"include": "#spacedelimiter"},{"include": "#invalid-illegalcharacter"}]}
+			}
+		},
+		"mq2cast-slashcommand-unsupported": {
+			"match": "(?i)\\b(casting|memorize|mem)\\b([^\\n\\r\\|]*)",
+			"captures": {
+				"1": { "name": "support.function.alert.mq2macro" },
+				"2": {"patterns": [{"include": "#spacedelimiter"},{"include": "#invalid-illegalcharacter"}]}
+			}
+		},
 		"eqslashcommand-unsupported": {
-			"match": "(?i)\\b(adriver|afk|alt|alternateadv|anon|assist|auction|autoinventory|autosplit|betabuff|Baz|book|bug|camp|cast|channel|charinfo|chatfontsize|claim|consent|clearchat|clearhits|consider|combatmusic|corpsedrag|corpsedrop|corpse|clearmarks|decline|deny|deletepetition|disband|discipline|dismount|doability|dopropertinting|duck|dual|dynamiclights|emote|facepick|exit|fastdrop|feedback|filter|find|findpc|follow|fontface|gmarknpc|friend|gsay|gems|guidehelp|guilddelete|guildinvite|getguildmotd|guildpeace|guildleader|guildremove|guildsay|guildstatus|guildwar|help|hidecorpse|ignore|hotbutton|inspect|inspectbuffs|indicator|invite|keys|invwinlabels|language|lfg|log|loadskin|loc|loot|makeleader|lootnodrop|mcicontrol|memspellset|marknpc|mixahead|mousespeed|msg|mp3|movelog|motd|note|open|outputfile|ooc|particledensity|pet|pause|petition|played|quit|random|reply|report|resetwindows|reverb|reversesound|roleplay|rmarknpc|rtarget|rewind|say|sdriver|serverfilter|shadow|shield|shout|showgrass|shownames|shownpcnames|showspelleffects|stand|stoptracking|stopcast|stopsong|sit|split|surname|tell|target|time|toggleinspect|trackfilter|tracksort|targetgroupbuff|trackplayers|trader|testbuffme|ttell|usecolor|viewport|vgroup|viewpetition|vrdelay|vplay|vraid|vtell|who|whotarget|wincolor|yell)\\b([^\\n\\r\\|]*)",
+			"match": "(?i)\\b(adriver|afk|alt|alternateadv|anon|assist|auction|autoinv|autoinventory|autosplit|betabuff|Baz|book|bug|camp|cast|channel|charinfo|chatfontsize|claim|consent|clearchat|clearhits|consider|combatmusic|corpsedrag|corpsedrop|corpse|clearmarks|decline|deny|deletepetition|disband|discipline|dismount|doability|dopropertinting|duck|dual|dynamiclights|emote|facepick|exit|fastdrop|feedback|filter|find|findpc|follow|fontface|gmarknpc|friend|gsay|gems|guidehelp|guilddelete|guildinvite|getguildmotd|guildpeace|guildleader|guildremove|g|gu|guildsay|guildstatus|guildwar|hail|help|hidec|hidecorpse|ignore|hotbutton|inspect|inspectbuffs|indicator|invite|keys|invwinlabels|language|lfg|log|loadskin|loc|loot|makeleader|lootnodrop|mcicontrol|memspellset|marknpc|mixahead|mousespeed|msg|mp3|movelog|motd|note|open|outputfile|ooc|particledensity|pet|pause|petition|played|quit|random|reply|report|resetwindows|reverb|reversesound|roleplay|rmarknpc|rtarget|rewind|say|sdriver|serverfilter|shadow|shield|shout|showgrass|shownames|shownpcnames|showspelleffects|stand|stoptracking|stopcast|stopsong|sit|split|surname|tell|target|time|toggleinspect|trackfilter|tracksort|targetgroupbuff|trackplayers|trader|testbuffme|ttell|usecolor|viewport|vgroup|viewpetition|vrdelay|vplay|vraid|vtell|who|whotarget|wincolor|yell)\\b([^\\n\\r\\|]*)",
 			"captures": {
 				"1": { "name": "support.function.alert.mq2macro" },
 				"2": {"patterns": [{"include": "#spacedelimiter"},{"include": "#invalid-illegalcharacter"}]}
 			}
 		},
 		"mq2slashcommand-singles": {
-			"match": "(?i)\\b(banklist|beep|break|charinfo|cleanup|cleanerrors|continue|defaulthud|destroy|drop|endmacro|identify|location|loginname|setautorun|unload|updateitems)\\b",
+			"match": "(?i)\\b(banklist|beep|break|charinfo|cleanup|cleanerrors|continue|defaulthud|destroy|drop|endmac|endmacro|identify|location|loginname|setautorun|unload|updateitems)\\b",
 			"captures": {
 				"1": { "name": "keyword.control.squelch.mq2macro" }
 			}
@@ -1205,8 +1266,7 @@
 				{"include": "#invalid-illegalcharacter"}	
 			]
 		},
-		"sqbracketcontents":
-		{
+		"sqbracketcontents": {
 			"match":"(?i)(((<<|>>|-))?(\\d*\\.?\\d+)|((\\!|<<|>>|-))?((?<pb>\\((?:[^\\(\\)]|\\g<pb>)+\\)))|((\\!|<<|>>|-|=))?(([ '\\.:_\\-[:alnum:]]|(?<vb>\\$\\{(?:[^\\$\\}]|\\g<vb>)+\\}))+)|(\\!)?(true|false)|(null)|(=?)([_[:alpha:]][ '\\.:_\\-[:alnum:]]*)|(=?)(\"[_[:alpha:]][ '\\.:_\\-[:alnum:]]*\"))((\\()(argb|bool|body|byte|class|corpse|deity|float|heading|int|invslot|ticks|race|raidmember)(\\)))?\\s*((,)|(?=\\]))",
 			"captures": {
 				"3": {"name": "keyword.operator.mq2macro"},
