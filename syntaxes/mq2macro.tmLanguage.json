@@ -663,7 +663,7 @@
 			}
 		},
 		"mq2slashcommand-ifblock": {
-			"begin": "(?i)\\s*(((?<=}) (else) )|((?<=}) (else) )?((\\\/)(if)\\s+((?<vb>\\((?:[^\\(\\)]|\\g<vb>)+\\))) ))({)",
+			"begin": "(?i)\\s*(((?<=}) (else) )|((?<=}) (else) )?((\\\/)(if|while)\\s+((?<vb>\\((?:[^\\(\\)]|\\g<vb>)+\\))) ))({)",
 			"beginCaptures": {
 				"3": { "name": "keyword.control.alert.mq2macro" },
 				"5": { "name": "keyword.control.alert.mq2macro" },
