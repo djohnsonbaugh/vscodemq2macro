@@ -30,5 +30,15 @@
         ["(", ")"],
         ["\"", "\""],
         ["'", "'"]
-    ]
+    ],
+    "folding": {
+        "markers": {
+            "start": "(i?)^\\s*sub\\s+",
+            "end": "(i?)^\\s*\/return"
+        }
+    },
+    "indentationRules": {
+        "increaseIndentPattern": "(?i)^(\\s*sub\\s+[^\\n\\r]*|((?!\\|).)*(\\{[^}\\n\\r]*|\\\/for[^\\n\\r]*))$",
+        "decreaseIndentPattern": "(?i)^\\s*(}|\\\/next\\s+[^\\n\\r]*)\\s*$"
+    }
 }
