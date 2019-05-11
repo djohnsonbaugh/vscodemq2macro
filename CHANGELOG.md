@@ -4,6 +4,9 @@ All notable changes to the "vscodemq2" extension will be documented in this file
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.5.0]
+- Custom Icon for .mac and .inc - vscode-icons extension is a prerequisite.
+
 ## [0.3.0]
 - Added /while
 - Added recognition of unsupported commands from optional plugins
