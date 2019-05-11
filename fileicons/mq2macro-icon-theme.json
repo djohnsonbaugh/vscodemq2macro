@@ -1,10 +1,5 @@
 {
-    "iconDefinitions": {
-      "_mac_file": {
-        "iconPath": "./images/mq2macro.svg"
-      }
-    },
-    "fileExtensions": {
-        "mac": "_mac_file"
-    }
-  }
+  "vsicons.associations.files": [
+      { "icon": "mq2macro-icon", "extensions": ["mac", "inc"], "format": "svg" }
+    ],
+}
