@@ -1,0 +1,10 @@
+{
+    "iconDefinitions": {
+      "_mac_file": {
+        "iconPath": "./images/mq2macro.svg"
+      }
+    },
+    "fileExtensions": {
+        "mac": "_mac_file"
+    }
+  }
