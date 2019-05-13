@@ -244,6 +244,7 @@
 				{ "include": "#mq2slashcommand-vardata" },
 				{ "include": "#mq2slashcommand-varset" },
 				{ "include": "#mq2slashcommand-unsupported"},
+				{ "include": "#mq2slashcommand-windowstate"},
 				{ "include": "#eqslashcommand-unsupported"},
 				{ "include": "#mq2eqbc-slashcommand-unsupported"},
 				{ "include": "#mq2cast-slashcommand-unsupported"},
@@ -1018,6 +1019,19 @@
 			"match": "(?i)\\b(banklist|beep|break|charinfo|cleanup|cleanerrors|continue|defaulthud|destroy|drop|endmac|endmacro|identify|location|loginname|setautorun|unload|updateitems)\\b",
 			"captures": {
 				"1": { "name": "keyword.control.squelch.mq2macro" }
+			}
+		},
+		"mq2slashcommand-windowstate": {
+			"match": "(?i)\\b(windowstate)\\s+(inventory|merchant|corpse|spellbook|map|notes)(\\s+(open|close)\\b)?([^\\n\\r]*)",
+			"captures": {
+				"1": { "name": "keyword.control.alert.mq2macro" },
+				"2": { "name": "support.type.immediate.mq2macro" },
+				"4": { "name": "keyword.control.alert.mq2macro" },
+				"5": { "patterns": [
+					{"include": "#comment"},
+					{"include": "#invalid-illegalcharacters"}						
+					]
+				}
 			}
 		},
 		"parenthesized-parameter-list": {
