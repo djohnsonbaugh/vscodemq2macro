@@ -226,6 +226,7 @@
 				{ "include": "#mq2slashcommand-bind"},
 				{ "include": "#mq2slashcommand-buyitem"},
 				{ "include": "#mq2slashcommand-call"},
+				{ "include": "#mq2slashcommand-click"},
 				{ "include": "#mq2slashcommand-declare"},
 				{ "include": "#mq2slashcommand-deletevar"},
 				{ "include": "#mq2slashcommand-delay"},
@@ -462,6 +463,19 @@
 							]
 						},
 						{"include": "#spacedelimiter"}
+					]
+				}
+			}
+		},
+		"mq2slashcommand-click": {
+			"match": "(?i)\\b(click)\\s+(left|right)(\\s+(center|target)\\b)?([^\\n\\r]*)",
+			"captures": {
+				"1": { "name": "keyword.control.alert.mq2macro" },
+				"2": { "name": "keyword.control.alert.mq2macro" },
+				"4": { "name": "keyword.control.alert.mq2macro" },
+				"5": { "patterns": [
+					{"include": "#comment"},
+					{"include": "#invalid-illegalcharacters"}						
 					]
 				}
 			}
